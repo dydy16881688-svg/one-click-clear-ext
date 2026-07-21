@@ -195,6 +195,14 @@ document.getElementById("run").addEventListener("click", () => {
     cache: document.getElementById("cache").checked,
     downloads: document.getElementById("downloads").checked,
   };
+  // 彻底清空：把当前设定档所有资料类型都清（含密码、表单、本地存储等）
+  if (document.getElementById("wipeProfile").checked) {
+    Object.assign(dataToRemove, {
+      cookies: true, history: true, cache: true, downloads: true,
+      passwords: true, formData: true, localStorage: true, indexedDB: true,
+      serviceWorkers: true, cacheStorage: true, fileSystems: true, webSQL: true,
+    });
+  }
   if (!Object.values(dataToRemove).some(Boolean)) {
     statusEl.style.color = "#d33";
     statusEl.textContent = "请至少勾选一项";
