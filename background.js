@@ -3,6 +3,39 @@
 // 记录「哪个新分页要填哪组帐密」
 const pendingFills = {}; // tabId -> { username, password }
 
+// ===== 动态工具栏图标：宝宝蓝底 + 自定义符号 =====
+const DEFAULT_ICON_SYMBOL = "📖";
+
+async function updateActionIcon(symbol) {
+  const sym = (symbol && symbol.trim()) || DEFAULT_ICON_SYMBOL;
+  const sizes = [16, 32, 48, 128];
+  const imageData = {};
+  for (const s of sizes) {
+    const canvas = new OffscreenCanvas(s, s);
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, s, s);
+    const r = Math.round(s * 0.24);
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(0, 0, s, s, r);
+    else ctx.rect(0, 0, s, s);
+    ctx.fillStyle = "#7fb9df"; // 纯宝宝蓝
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `${Math.round(s * 0.62)}px "Segoe UI Emoji","Segoe UI",sans-serif`;
+    ctx.fillText(sym, s / 2, s / 2 + Math.round(s * 0.06));
+    imageData[s] = ctx.getImageData(0, 0, s, s);
+  }
+  try { await chrome.action.setIcon({ imageData }); } catch (e) {}
+}
+
+// 启动时套用；符号变更时即时更新
+chrome.storage.local.get("iconSymbol", ({ iconSymbol }) => updateActionIcon(iconSymbol));
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes.iconSymbol) updateActionIcon(changes.iconSymbol.newValue);
+});
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   // ===== 清痕迹 =====
   if (msg.type === "CLEAR") {

@@ -101,11 +101,28 @@ function clearEmptyOtpRows() {
 document.getElementById("addOtp").addEventListener("click", () => addOtpRow("", ""));
 
 // ===== 载入 =====
+const ICON_PICKS = ["📖", "🔑", "🚀", "⚡", "🐤", "🌐", "⭐", "🛡️", "💼", "🔐", "🧹", "🎯"];
+function buildIconPicks() {
+  const box = document.getElementById("iconPicks");
+  box.innerHTML = ICON_PICKS.map(
+    (e) =>
+      `<button type="button" class="pick" data-e="${e}" style="font-size:18px;padding:4px 9px;margin:3px;background:#fff;border:1.5px solid #ece3c8;border-radius:10px;cursor:pointer">${e}</button>`
+  ).join("");
+  box.querySelectorAll(".pick").forEach((b) =>
+    b.addEventListener("click", () => {
+      document.getElementById("iconSymbol").value = b.dataset.e;
+    })
+  );
+}
+
 async function load() {
-  const store = await chrome.storage.local.get(["creds", "urls", "totp"]);
+  const store = await chrome.storage.local.get(["creds", "urls", "totp", "iconSymbol"]);
   const creds = store.creds || [];
   const urls = store.urls || [];
   const totp = store.totp || [];
+
+  document.getElementById("iconSymbol").value = store.iconSymbol || "📖";
+  buildIconPicks();
 
   // 帐密组
   credRowsEl.innerHTML = "";
@@ -208,7 +225,9 @@ document.getElementById("save").addEventListener("click", async () => {
     if (label && secret) totp.push({ label, secret });
   });
 
-  await chrome.storage.local.set({ creds, urls, totp });
+  const iconSymbol = document.getElementById("iconSymbol").value.trim() || "📖";
+
+  await chrome.storage.local.set({ creds, urls, totp, iconSymbol });
   const saved = document.getElementById("saved");
   saved.textContent = `✅ 已保存（${creds.length} 组帐密 / ${urls.length} 网址 / ${totp.length} 验证器）`;
   setTimeout(() => (saved.textContent = ""), 3000);
