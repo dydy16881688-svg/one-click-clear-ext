@@ -8,56 +8,67 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, "Microsoft YaHei", sans-serif;
-      color: #1a1a1a;
+      color: #5b5647;
+      background: #fffdf4;
     }
-    .tabs { display: flex; border-bottom: 1px solid #eee; }
+    .tabs { display: flex; border-bottom: 1px solid #f0ead3; background: #fffdf4; }
     .tab {
-      flex: 1; text-align: center; padding: 10px 0;
-      font-size: 13px; cursor: pointer; color: #666;
+      flex: 1; text-align: center; padding: 11px 0;
+      font-size: 13px; cursor: pointer; color: #9a927e;
     }
-    .tab.active { color: #d33; font-weight: 600; box-shadow: inset 0 -2px 0 #d33; }
+    .tab.active { color: #4a9bc4; font-weight: 700; box-shadow: inset 0 -2px 0 #7fb9df; }
     .panel { padding: 14px; display: none; }
     .panel.active { display: block; }
 
     button.primary {
       width: 100%; padding: 12px; margin-top: 6px;
-      font-size: 15px; font-weight: 600; color: #fff;
-      background: #d33; border: none; border-radius: 8px; cursor: pointer;
+      font-size: 15px; font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #a9d4ee, #7fb9df);
+      border: none; border-radius: 12px; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(127,185,223,.4);
+      transition: filter .15s, transform .05s;
     }
-    button.primary:hover { background: #b71c1c; }
+    button.primary:hover { filter: brightness(1.03); }
+    button.primary:active { transform: scale(.99); }
+    /* 清理的执行键用小鸡黄，跟打开区分开 */
+    #run {
+      background: linear-gradient(135deg, #ffe08a, #f7cf5e); color: #8a6d17;
+      box-shadow: 0 4px 14px rgba(247,207,94,.45);
+    }
     .cat-row {
       display: flex; align-items: center; justify-content: space-between;
       gap: 8px; margin-top: 8px;
     }
-    .cat-name { font-size: 13px; color: #333; }
-    .cat-count { font-size: 11px; color: #999; }
+    .cat-name { font-size: 13px; color: #5b5647; }
+    .cat-count { font-size: 11px; color: #b6ac8e; }
     button.sec {
-      padding: 7px 14px; font-size: 13px; color: #d33; background: #fff;
-      border: 1px solid #d33; border-radius: 7px; cursor: pointer; white-space: nowrap;
+      padding: 7px 14px; font-size: 13px; font-weight: 600; color: #4a9bc4; background: #fff;
+      border: 1.5px solid #a9d4ee; border-radius: 999px; cursor: pointer; white-space: nowrap;
     }
-    button.sec:hover { background: #fde8e8; }
+    button.sec:hover { background: #eef7fd; }
 
     .opt { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 13px; }
-    .opt input { width: 16px; height: 16px; }
+    .opt input { width: 16px; height: 16px; accent-color: #7fb9df; }
 
     /* 验证器 */
-    .otp-hint { font-size: 11px; color: #aaa; margin: 2px 0 10px; }
+    .otp-hint { font-size: 11px; color: #b6ac8e; margin: 2px 0 10px; }
     .otp-item {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 14px; margin-bottom: 10px; background: #fff;
-      border: 1px solid #eee; border-radius: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.07); cursor: pointer;
+      padding: 12px 14px; margin-bottom: 10px; background: #fffef8;
+      border: 1px solid #f0ead3; border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(180,170,120,.13); cursor: pointer;
       transition: box-shadow .15s, transform .05s;
     }
-    .otp-item:hover { box-shadow: 0 3px 12px rgba(0,0,0,.13); }
+    .otp-item:hover { box-shadow: 0 4px 14px rgba(180,170,120,.22); }
     .otp-item:active { transform: scale(.99); }
     .otp-left { display: flex; flex-direction: column; min-width: 0; }
     .otp-label {
-      font-size: 12px; color: #999; margin-bottom: 3px;
+      font-size: 12px; color: #9a927e; margin-bottom: 3px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;
     }
+    /* 数字颜色由 JS 控制（蓝/红），此处不设 color */
     .otp-code {
-      font-size: 28px; font-weight: 600; letter-spacing: 3px; color: #eb6a56;
+      font-size: 28px; font-weight: 600; letter-spacing: 3px;
       font-variant-numeric: tabular-nums; line-height: 1.1;
     }
     .otp-ring {
@@ -65,15 +76,15 @@
       display: flex; align-items: center; justify-content: center;
     }
     .otp-ring-inner {
-      width: 22px; height: 22px; border-radius: 50%; background: #fff;
+      width: 22px; height: 22px; border-radius: 50%; background: #fffef8;
       display: flex; align-items: center; justify-content: center;
-      font-size: 10px; color: #999;
+      font-size: 10px; color: #9a927e;
     }
 
-    .hint { font-size: 11px; color: #999; margin-top: 10px; line-height: 1.5; }
-    .link { color: #1a73e8; cursor: pointer; text-decoration: underline; font-size: 12px; }
+    .hint { font-size: 11px; color: #b6ac8e; margin-top: 10px; line-height: 1.5; }
+    .link { color: #4a9bc4; cursor: pointer; text-decoration: underline; font-size: 12px; }
     #status { margin-top: 10px; font-size: 12px; min-height: 16px; text-align: center; }
-    .empty { font-size: 12px; color: #999; text-align: center; padding: 12px 0; }
+    .empty { font-size: 12px; color: #b6ac8e; text-align: center; padding: 12px 0; }
   </style>
 </head>
 <body>
@@ -90,7 +101,7 @@
     <div id="urlCount" class="hint"></div>
     <div style="margin-top:8px"><span class="link" id="toOptions1">⚙ 设置网址 / 帐密</span></div>
 
-    <label class="opt" style="margin-top:14px; border-top:1px solid #eee; padding-top:12px;">
+    <label class="opt" style="margin-top:14px; border-top:1px solid #f0ead3; padding-top:12px;">
       <input type="checkbox" id="forceFont" />
       强制所有网站用微软正黑体
     </label>
