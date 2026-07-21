@@ -121,7 +121,8 @@
   <section class="panel">
     <h2>🌐 ② 一键打开的网址（可分类 + 选帐密）</h2>
     <p class="desc">
-      分类相同的会归成一组，插件里能「按分类打开」。选择要自动填入的账号密码；如果选「不填账号密码」，仅打开网页，不自动填入。
+      分类相同的会归成一组，插件里能「按分类打开」。<br />
+      选择要自动填入的账号密码；如果选「不填账号密码」，仅打开网页，不自动填入。
     </p>
     <div class="row head">
       <span style="width:120px">名称</span><span style="width:95px">分类</span><span style="flex:1">网址（含 https://）</span><span style="width:130px">用哪组帐密</span><span style="width:48px"></span>
@@ -134,8 +135,11 @@
     <h2>📲 ③ 从手机批量导入验证器</h2>
     <div class="card">
       <div class="steps">
-        <b>手机 Google Authenticator：</b>右上角 ⋮ →「转移账户」→「导出账户」→ 勾选 → 生成 QR。<br />
-        把 QR 截图用「<b>传文件 / 原图</b>」方式传到电脑（别用微信/Telegram 压缩发送），然后：
+        📱 手机操作：<br />
+        打开 Google Authenticator → 左上角 ☰ → 转移帐户 → 汇出帐户 → 选择账号并生成 QR CODE。<br />
+        ⚠️ 注意：导出后请选择「保留已汇出的帐户」，否则手机端验证码会被清空！<br />
+        💻 上传方式：<br />
+        将 QR CODE 截图传到电脑，直接点击「选择档案」或按 Ctrl + V 粘贴 即可。
       </div>
       <input type="file" id="qrFile" accept="image/*" />
       <div id="pasteZone" tabindex="0">
