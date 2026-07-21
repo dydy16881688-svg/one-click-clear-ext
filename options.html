@@ -7,38 +7,38 @@
     * { box-sizing: border-box; }
     body {
       max-width: 760px; margin: 0 auto; padding: 30px 20px 60px;
-      font-family: -apple-system, "Microsoft YaHei", sans-serif; color: #5a4a54;
+      font-family: -apple-system, "Microsoft YaHei", sans-serif; color: #5b5647;
       background:
-        radial-gradient(1200px 500px at 100% -10%, #fdeef6 0, transparent 60%),
-        radial-gradient(1000px 500px at -10% 0%, #eef0ff 0, transparent 55%),
-        #fdf6fa;
+        radial-gradient(1000px 460px at 100% -10%, #fdf3c9 0, transparent 55%),
+        radial-gradient(1000px 460px at -10% 0%, #dceffb 0, transparent 55%),
+        #fffdf4;
       min-height: 100vh;
     }
     h1 {
-      font-size: 22px; color: #ff7aa2; margin: 0 0 16px;
+      font-size: 22px; color: #5f7d95; margin: 0 0 16px;
       display: flex; align-items: center; gap: 8px;
     }
 
     /* 卡片区块 */
     .panel {
-      background: #fff; border: 1px solid #ffe6f0; border-radius: 22px;
+      background: #fffef8; border: 1px solid #f0ead3; border-radius: 20px;
       padding: 20px 22px; margin-bottom: 18px;
-      box-shadow: 0 6px 22px rgba(255,150,185,.12);
+      box-shadow: 0 5px 18px rgba(180,170,120,.13);
     }
     h2 {
-      font-size: 16px; color: #e0688f; margin: 0 0 6px;
+      font-size: 16px; color: #6f8598; margin: 0 0 6px;
       display: flex; align-items: center; gap: 6px;
     }
-    p.desc { font-size: 12.5px; color: #b193a3; margin: 4px 0 14px; line-height: 1.7; }
+    p.desc { font-size: 12.5px; color: #9a927e; margin: 4px 0 14px; line-height: 1.7; }
 
     /* 输入框 */
     input, select, textarea {
-      padding: 9px 11px; font-size: 13px; color: #5a4a54;
-      border: 1.5px solid #ffe0ec; border-radius: 12px; background: #fffafc;
+      padding: 9px 11px; font-size: 13px; color: #5b5647;
+      border: 1.5px solid #ece3c8; border-radius: 12px; background: #fffdf6;
       transition: border-color .15s, box-shadow .15s;
     }
     input:focus, select:focus, textarea:focus {
-      outline: none; border-color: #ff9ec2; box-shadow: 0 0 0 3px rgba(255,158,194,.22);
+      outline: none; border-color: #8ec5e6; box-shadow: 0 0 0 3px rgba(142,197,230,.28);
     }
     textarea { width: 100%; min-height: 64px; font-family: monospace; }
 
@@ -48,21 +48,21 @@
       padding: 9px 18px; font-size: 13px; transition: transform .05s, filter .15s, background .15s;
     }
     button:active { transform: scale(.97); }
-    button.ghost { background: #ffe0ec; color: #e0688f; }
-    button.ghost:hover { background: #ffd0e2; }
+    button.ghost { background: #ffeaa8; color: #927611; }
+    button.ghost:hover { background: #ffe08a; }
     button.del {
-      background: #ffe3ea; color: #ff6a89; border-radius: 12px; padding: 8px 13px; font-size: 13px;
+      background: #eee3cf; color: #a08356; border-radius: 12px; padding: 8px 13px; font-size: 13px;
     }
-    button.del:hover { background: #ffd0da; }
+    button.del:hover { background: #e6d8bd; }
     button.save {
-      background: linear-gradient(135deg, #ffb3c6, #ff8fab); color: #fff;
+      background: linear-gradient(135deg, #a9d4ee, #7fb9df); color: #fff;
       font-size: 15px; padding: 13px 34px;
-      box-shadow: 0 6px 18px rgba(255,143,171,.45);
+      box-shadow: 0 6px 18px rgba(127,185,223,.42);
     }
     button.save:hover { filter: brightness(1.03); }
-    #addImportBtn, #importBtn {
-      background: linear-gradient(135deg, #c3b5ff, #a78bfa); color: #fff;
-      box-shadow: 0 4px 14px rgba(167,139,250,.35);
+    #importBtn {
+      background: linear-gradient(135deg, #a9d4ee, #7fb9df); color: #fff;
+      box-shadow: 0 4px 14px rgba(127,185,223,.3);
     }
 
     .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
@@ -76,33 +76,33 @@
     .otp-row .lbl { width: 180px; }
     .otp-row .sec { flex: 1; }
 
-    .head { font-size: 11px; color: #c9a7b8; margin-bottom: 4px; font-weight: 600; }
+    .head { font-size: 11px; color: #bcaf8c; margin-bottom: 4px; font-weight: 600; }
 
-    #saved { color: #3bb98f; font-size: 14px; margin-left: 12px; font-weight: 700; }
+    #saved { color: #4a9bc4; font-size: 14px; margin-left: 12px; font-weight: 700; }
     #importMsg { font-size: 13px; margin-top: 8px; }
 
     /* 导入小卡 */
     .card {
-      background: #f7f4ff; border: 1px solid #e7deff; border-radius: 16px;
+      background: #eef7fd; border: 1px solid #d5e9f5; border-radius: 16px;
       padding: 16px; margin-top: 8px;
     }
-    .steps { font-size: 12px; color: #8a7aa0; line-height: 1.8; margin: 6px 0 12px; }
+    .steps { font-size: 12px; color: #7e8a95; line-height: 1.8; margin: 6px 0 12px; }
     #pasteZone {
-      margin-top: 10px; border: 2px dashed #ffb8d0; border-radius: 14px;
-      padding: 18px; text-align: center; color: #d5779b; font-size: 13px;
-      cursor: pointer; background: #fffafc;
+      margin-top: 10px; border: 2px dashed #9fcbe8; border-radius: 14px;
+      padding: 18px; text-align: center; color: #5b93b5; font-size: 13px;
+      cursor: pointer; background: #fffdf6;
     }
 
     /* 提醒条 */
     .warn {
-      background: #fff0f5; border: 1px solid #ffd6e6; border-radius: 16px;
-      padding: 12px 16px; font-size: 12.5px; color: #c96a86; line-height: 1.7; margin-bottom: 18px;
+      background: #fdf6df; border: 1px solid #f2e3ad; border-radius: 16px;
+      padding: 12px 16px; font-size: 12.5px; color: #8a7526; line-height: 1.7; margin-bottom: 18px;
     }
     .save-bar { text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
-  <h1>🎀 插件设置</h1>
+  <h1>⚙️ 插件设置</h1>
 
   <div class="warn">
     ⚠️ 帐号密码、验证器密钥都会<b>明文存在这台电脑</b>（浏览器本机，未加密）。请给电脑设开机密码、别在公用电脑用、别把带密码的设定分享给别人。
@@ -144,9 +144,7 @@
         📋 点这里，然后按 <b>Ctrl+V</b> 直接粘贴 QR 图片
         <div id="pastePreview" style="margin-top:8px;"></div>
       </div>
-      <div style="margin-top:10px" class="steps">或直接粘贴 QR 文字（otpauth-migration:// 或 otpauth://）：</div>
-      <textarea id="qrText" placeholder="otpauth-migration://offline?data=..."></textarea>
-      <div style="margin-top:8px"><button id="importBtn">解析并导入到下方列表</button></div>
+      <div style="margin-top:12px"><button id="importBtn">解析并导入到下方列表</button></div>
       <div id="importMsg"></div>
     </div>
   </section>

@@ -164,18 +164,15 @@ document.getElementById("importBtn").addEventListener("click", async () => {
   importMsg.textContent = "解析中…";
   try {
     const file = document.getElementById("qrFile").files[0];
-    const text = document.getElementById("qrText").value.trim();
     let rawList = [];
     if (file) rawList = await decodeQrFromFile(file);
     else if (pastedBlob) rawList = await decodeQrFromFile(pastedBlob);
-    else if (text) rawList = [text];
-    else throw new Error("请先选图片、粘贴 QR 图片，或粘贴 QR 文字");
+    else throw new Error("请先选一张 QR 图片，或用 Ctrl+V 粘贴 QR 图片");
 
     const msg = await doImport(rawList);
     importMsg.style.color = "#2e7d32";
     importMsg.textContent = msg;
     document.getElementById("qrFile").value = "";
-    document.getElementById("qrText").value = "";
     pastedBlob = null;
     pastePreview.innerHTML = "";
   } catch (e) {
