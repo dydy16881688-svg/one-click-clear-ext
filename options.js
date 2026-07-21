@@ -22,7 +22,7 @@ function addCredRow(id = uuid(), label = "", username = "", password = "") {
     <input class="clabel" placeholder="如 默认帐密" value="${escapeAttr(label)}" />
     <input class="cuser" placeholder="帐号" value="${escapeAttr(username)}" />
     <input class="cpass" type="password" placeholder="密码" value="${escapeAttr(password)}" />
-    <button class="del">删</button>
+    <button class="del" title="删除">🗑️</button>
   `;
   row.querySelector(".del").addEventListener("click", () => {
     row.remove();
@@ -46,7 +46,7 @@ function refreshCredSelects() {
   urlRowsEl.querySelectorAll(".ucred").forEach((sel) => {
     const cur = sel.value;
     sel.innerHTML =
-      '<option value="">不填帐密</option>' +
+      '<option value="">不填账号密码</option>' +
       creds.map((c) => `<option value="${escapeAttr(c.id)}">${escapeHtml(c.label)}</option>`).join("");
     if ([...sel.options].some((o) => o.value === cur)) sel.value = cur;
   });
@@ -63,7 +63,7 @@ function addUrlRow(name = "", category = "", url = "", credId = "") {
     <input class="ucat" placeholder="分类" value="${escapeAttr(category)}" />
     <input class="uurl" placeholder="https://..." value="${escapeAttr(url)}" />
     <select class="ucred"></select>
-    <button class="del">删</button>
+    <button class="del" title="删除">🗑️</button>
   `;
   row.querySelector(".del").addEventListener("click", () => row.remove());
   urlRowsEl.appendChild(row);
@@ -87,7 +87,7 @@ function addOtpRow(label = "", secret = "") {
   row.innerHTML = `
     <input class="lbl" style="width:180px" placeholder="名字，如 Google" value="${escapeAttr(label)}" />
     <input class="sec" style="flex:1" placeholder="密钥 base32" value="${escapeAttr(secret)}" />
-    <button class="del">删</button>
+    <button class="del" title="删除">🗑️</button>
   `;
   row.querySelector(".del").addEventListener("click", () => row.remove());
   otpRowsEl.appendChild(row);

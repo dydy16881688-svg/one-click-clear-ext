@@ -104,26 +104,24 @@
 <body>
   <h1>⚙️ 插件设置</h1>
 
-  <div class="warn">
-    ⚠️ 帐号密码、验证器密钥都会<b>明文存在这台电脑</b>（浏览器本机，未加密）。请给电脑设开机密码、别在公用电脑用、别把带密码的设定分享给别人。
-  </div>
-
   <section class="panel">
-    <h2>🔑 ① 帐密组</h2>
+    <h2>🔑 ① 账号密码设定</h2>
     <p class="desc">
-      先建一组「默认帐密」，大部分网站都用它。若某些网站帐密不同，点「+ 加一组帐密」再建，然后在下面②给那些网址选对应的组。
+      第1步：先设置一组「默认账号密码」，大部分网站都会自动用这组。<br />
+      第2步：如果有网站用不同的账号密码，点「+ 加一组账号密码」新建。<br />
+      第3步：在下方 ② 的网址列表中，将你需要的网站选择对应的账号密码组。
     </p>
     <div class="row head">
       <span style="width:120px">名称</span><span style="flex:1">帐号</span><span style="flex:1">密码</span><span style="width:48px"></span>
     </div>
     <div id="credRows"></div>
-    <button id="addCred" class="ghost">+ 加一组帐密</button>
+    <button id="addCred" class="ghost">+ 加一组账号密码</button>
   </section>
 
   <section class="panel">
     <h2>🌐 ② 一键打开的网址（可分类 + 选帐密）</h2>
     <p class="desc">
-      分类相同的会归成一组，插件里能「按分类打开」。帐密栏选要用哪组；选「不填帐密」就只开不填。
+      分类相同的会归成一组，插件里能「按分类打开」。选择要自动填入的账号密码；如果选「不填账号密码」，仅打开网页，不自动填入。
     </p>
     <div class="row head">
       <span style="width:120px">名称</span><span style="width:95px">分类</span><span style="flex:1">网址（含 https://）</span><span style="width:130px">用哪组帐密</span><span style="width:48px"></span>
@@ -150,8 +148,8 @@
   </section>
 
   <section class="panel">
-    <h2>🔐 ④ 验证器账户（可手动增删改）</h2>
-    <p class="desc">导入的账户会出现在这里。label = 名字；secret = base32 密钥。</p>
+    <h2>🔐 ④ 验证器账户（可手动编辑）</h2>
+    <p class="desc">导入的账户会出现在这里。</p>
     <div id="otpRows"></div>
     <button id="addOtp" class="ghost">+ 加一行</button>
   </section>
