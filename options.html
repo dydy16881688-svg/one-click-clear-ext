@@ -4,24 +4,66 @@
   <meta charset="UTF-8" />
   <title>设置</title>
   <style>
+    * { box-sizing: border-box; }
     body {
-      max-width: 720px; margin: 30px auto; padding: 0 20px;
-      font-family: -apple-system, "Microsoft YaHei", sans-serif; color: #1a1a1a;
+      max-width: 760px; margin: 0 auto; padding: 30px 20px 60px;
+      font-family: -apple-system, "Microsoft YaHei", sans-serif; color: #5a4a54;
+      background:
+        radial-gradient(1200px 500px at 100% -10%, #fdeef6 0, transparent 60%),
+        radial-gradient(1000px 500px at -10% 0%, #eef0ff 0, transparent 55%),
+        #fdf6fa;
+      min-height: 100vh;
     }
-    h2 { font-size: 17px; margin: 26px 0 8px; }
-    p.desc { font-size: 13px; color: #666; margin: 4px 0 10px; line-height: 1.6; }
+    h1 {
+      font-size: 22px; color: #ff7aa2; margin: 0 0 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* 卡片区块 */
+    .panel {
+      background: #fff; border: 1px solid #ffe6f0; border-radius: 22px;
+      padding: 20px 22px; margin-bottom: 18px;
+      box-shadow: 0 6px 22px rgba(255,150,185,.12);
+    }
+    h2 {
+      font-size: 16px; color: #e0688f; margin: 0 0 6px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    p.desc { font-size: 12.5px; color: #b193a3; margin: 4px 0 14px; line-height: 1.7; }
+
+    /* 输入框 */
     input, select, textarea {
-      padding: 8px; font-size: 13px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;
+      padding: 9px 11px; font-size: 13px; color: #5a4a54;
+      border: 1.5px solid #ffe0ec; border-radius: 12px; background: #fffafc;
+      transition: border-color .15s, box-shadow .15s;
     }
-    textarea { width: 100%; min-height: 60px; font-family: monospace; }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: #ff9ec2; box-shadow: 0 0 0 3px rgba(255,158,194,.22);
+    }
+    textarea { width: 100%; min-height: 64px; font-family: monospace; }
+
+    /* 按钮 */
     button {
-      padding: 8px 16px; font-size: 13px; font-weight: 600; color: #fff;
-      background: #1a73e8; border: none; border-radius: 6px; cursor: pointer;
+      border: none; cursor: pointer; font-weight: 700; border-radius: 999px;
+      padding: 9px 18px; font-size: 13px; transition: transform .05s, filter .15s, background .15s;
     }
-    button:hover { background: #1558b0; }
-    button.del { background: #d33; padding: 8px 12px; }
-    button.save { background: #2e7d32; margin-top: 10px; font-size: 15px; padding: 12px 28px; }
-    button.ghost { background: #666; }
+    button:active { transform: scale(.97); }
+    button.ghost { background: #ffe0ec; color: #e0688f; }
+    button.ghost:hover { background: #ffd0e2; }
+    button.del {
+      background: #ffe3ea; color: #ff6a89; border-radius: 12px; padding: 8px 13px; font-size: 13px;
+    }
+    button.del:hover { background: #ffd0da; }
+    button.save {
+      background: linear-gradient(135deg, #ffb3c6, #ff8fab); color: #fff;
+      font-size: 15px; padding: 13px 34px;
+      box-shadow: 0 6px 18px rgba(255,143,171,.45);
+    }
+    button.save:hover { filter: brightness(1.03); }
+    #addImportBtn, #importBtn {
+      background: linear-gradient(135deg, #c3b5ff, #a78bfa); color: #fff;
+      box-shadow: 0 4px 14px rgba(167,139,250,.35);
+    }
 
     .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
     .cred-row .clabel { width: 120px; }
@@ -31,68 +73,95 @@
     .url-row .ucat  { width: 95px; }
     .url-row .uurl  { flex: 1; }
     .url-row .ucred { width: 130px; }
+    .otp-row .lbl { width: 180px; }
+    .otp-row .sec { flex: 1; }
 
-    .head { display: flex; gap: 10px; font-size: 11px; color: #999; margin-bottom: 4px; }
+    .head { font-size: 11px; color: #c9a7b8; margin-bottom: 4px; font-weight: 600; }
 
-    #saved { color: #2e7d32; font-size: 14px; margin-left: 12px; }
+    #saved { color: #3bb98f; font-size: 14px; margin-left: 12px; font-weight: 700; }
     #importMsg { font-size: 13px; margin-top: 8px; }
-    .card { background: #f7f9ff; border: 1px solid #d6e0ff; border-radius: 10px; padding: 14px; margin-top: 8px; }
-    .steps { font-size: 12px; color: #555; line-height: 1.7; margin: 6px 0 12px; }
-    .warn { background: #fff3e0; border: 1px solid #ffcc80; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #a15c00; line-height: 1.6; margin-top: 6px; }
+
+    /* 导入小卡 */
+    .card {
+      background: #f7f4ff; border: 1px solid #e7deff; border-radius: 16px;
+      padding: 16px; margin-top: 8px;
+    }
+    .steps { font-size: 12px; color: #8a7aa0; line-height: 1.8; margin: 6px 0 12px; }
+    #pasteZone {
+      margin-top: 10px; border: 2px dashed #ffb8d0; border-radius: 14px;
+      padding: 18px; text-align: center; color: #d5779b; font-size: 13px;
+      cursor: pointer; background: #fffafc;
+    }
+
+    /* 提醒条 */
+    .warn {
+      background: #fff0f5; border: 1px solid #ffd6e6; border-radius: 16px;
+      padding: 12px 16px; font-size: 12.5px; color: #c96a86; line-height: 1.7; margin-bottom: 18px;
+    }
+    .save-bar { text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
-  <h1 style="font-size:20px">插件设置</h1>
+  <h1>🎀 插件设置</h1>
 
   <div class="warn">
     ⚠️ 帐号密码、验证器密钥都会<b>明文存在这台电脑</b>（浏览器本机，未加密）。请给电脑设开机密码、别在公用电脑用、别把带密码的设定分享给别人。
   </div>
 
-  <h2>① 帐密组</h2>
-  <p class="desc">
-    先建一组「默认帐密」，大部分网站都用它。若某些网站帐密不同，点「+ 加一组帐密」再建，然后在下面②给那些网址选对应的组。
-  </p>
-  <div class="row head">
-    <span style="width:120px">名称</span><span style="flex:1">帐号</span><span style="flex:1">密码</span><span style="width:44px"></span>
-  </div>
-  <div id="credRows"></div>
-  <button id="addCred" class="ghost">+ 加一组帐密</button>
-
-  <h2>② 一键打开的网址（可分类 + 选帐密）</h2>
-  <p class="desc">
-    分类相同的会归成一组，插件里能「按分类打开」。帐密栏选要用哪组；选「不填帐密」就只开不填。
-  </p>
-  <div class="row head">
-    <span style="width:120px">名称</span><span style="width:95px">分类</span><span style="flex:1">网址（含 https://）</span><span style="width:130px">用哪组帐密</span><span style="width:44px"></span>
-  </div>
-  <div id="urlRows"></div>
-  <button id="addUrl" class="ghost">+ 加一个网址</button>
-
-  <h2>③ 从手机批量导入验证器</h2>
-  <div class="card">
-    <div class="steps">
-      <b>手机 Google Authenticator：</b>右上角 ⋮ →「转移账户」→「导出账户」→ 勾选 → 生成 QR。<br />
-      把 QR 截图用「<b>传文件 / 原图</b>」方式传到电脑（别用微信/Telegram 压缩发送），然后：
+  <section class="panel">
+    <h2>🔑 ① 帐密组</h2>
+    <p class="desc">
+      先建一组「默认帐密」，大部分网站都用它。若某些网站帐密不同，点「+ 加一组帐密」再建，然后在下面②给那些网址选对应的组。
+    </p>
+    <div class="row head">
+      <span style="width:120px">名称</span><span style="flex:1">帐号</span><span style="flex:1">密码</span><span style="width:48px"></span>
     </div>
-    <input type="file" id="qrFile" accept="image/*" />
-    <div id="pasteZone" style="margin-top:10px; border:2px dashed #9db8ff; border-radius:10px; padding:18px; text-align:center; color:#5573c7; font-size:13px; cursor:pointer; background:#fff;" tabindex="0">
-      📋 点这里，然后按 <b>Ctrl+V</b> 直接粘贴 QR 图片
-      <div id="pastePreview" style="margin-top:8px;"></div>
+    <div id="credRows"></div>
+    <button id="addCred" class="ghost">+ 加一组帐密</button>
+  </section>
+
+  <section class="panel">
+    <h2>🌐 ② 一键打开的网址（可分类 + 选帐密）</h2>
+    <p class="desc">
+      分类相同的会归成一组，插件里能「按分类打开」。帐密栏选要用哪组；选「不填帐密」就只开不填。
+    </p>
+    <div class="row head">
+      <span style="width:120px">名称</span><span style="width:95px">分类</span><span style="flex:1">网址（含 https://）</span><span style="width:130px">用哪组帐密</span><span style="width:48px"></span>
     </div>
-    <div style="margin-top:10px" class="steps">或直接粘贴 QR 文字（otpauth-migration:// 或 otpauth://）：</div>
-    <textarea id="qrText" placeholder="otpauth-migration://offline?data=..."></textarea>
-    <div style="margin-top:8px"><button id="importBtn">解析并导入到下方列表</button></div>
-    <div id="importMsg"></div>
+    <div id="urlRows"></div>
+    <button id="addUrl" class="ghost">+ 加一个网址</button>
+  </section>
+
+  <section class="panel">
+    <h2>📲 ③ 从手机批量导入验证器</h2>
+    <div class="card">
+      <div class="steps">
+        <b>手机 Google Authenticator：</b>右上角 ⋮ →「转移账户」→「导出账户」→ 勾选 → 生成 QR。<br />
+        把 QR 截图用「<b>传文件 / 原图</b>」方式传到电脑（别用微信/Telegram 压缩发送），然后：
+      </div>
+      <input type="file" id="qrFile" accept="image/*" />
+      <div id="pasteZone" tabindex="0">
+        📋 点这里，然后按 <b>Ctrl+V</b> 直接粘贴 QR 图片
+        <div id="pastePreview" style="margin-top:8px;"></div>
+      </div>
+      <div style="margin-top:10px" class="steps">或直接粘贴 QR 文字（otpauth-migration:// 或 otpauth://）：</div>
+      <textarea id="qrText" placeholder="otpauth-migration://offline?data=..."></textarea>
+      <div style="margin-top:8px"><button id="importBtn">解析并导入到下方列表</button></div>
+      <div id="importMsg"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>🔐 ④ 验证器账户（可手动增删改）</h2>
+    <p class="desc">导入的账户会出现在这里。label = 名字；secret = base32 密钥。</p>
+    <div id="otpRows"></div>
+    <button id="addOtp" class="ghost">+ 加一行</button>
+  </section>
+
+  <div class="save-bar">
+    <button class="save" id="save">💾 保存全部</button>
+    <span id="saved"></span>
   </div>
-
-  <h2>④ 验证器账户（可手动增删改）</h2>
-  <p class="desc">导入的账户会出现在这里。label = 名字；secret = base32 密钥。</p>
-  <div id="otpRows"></div>
-  <button id="addOtp" class="ghost">+ 加一行</button>
-
-  <br /><br />
-  <button class="save" id="save">保存全部</button>
-  <span id="saved"></span>
 
   <script src="jsqr.js"></script>
   <script src="migration.js"></script>

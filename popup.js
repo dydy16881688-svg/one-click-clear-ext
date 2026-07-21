@@ -85,9 +85,13 @@ let otpTimer = null;
 let otpData = [];
 let lastLeft = 0;
 
+const WARN_AT = 5; // 剩几秒开始变红
+function codeColor(left) {
+  return left <= WARN_AT ? "#eb4d4d" : "#2f7cf6"; // 蓝→红
+}
 function ringStyle(left) {
   const deg = (left / 30) * 360;
-  return `background:conic-gradient(#eb6a56 ${deg}deg, #ececec 0)`;
+  return `background:conic-gradient(${codeColor(left)} ${deg}deg, #ececec 0)`;
 }
 
 // 重画整份列表（含算码）
@@ -124,7 +128,7 @@ async function paintCodes() {
       <div class="otp-item" data-i="${i}">
         <div class="otp-left">
           <span class="otp-label">${escapeHtml(r.label)}</span>
-          <span class="otp-code">${r.code}</span>
+          <span class="otp-code" style="color:${codeColor(left)}">${r.code}</span>
         </div>
         <div class="otp-ring" style="${ringStyle(left)}">
           <span class="otp-ring-inner">${left}</span>
@@ -140,11 +144,13 @@ async function paintCodes() {
       navigator.clipboard.writeText(raw).then(() => {
         const codeEl = el.querySelector(".otp-code");
         const old = codeEl.textContent;
+        codeEl.dataset.copied = "1";
         codeEl.textContent = "已复制 ✓";
         codeEl.style.color = "#2e7d32";
         setTimeout(() => {
+          delete codeEl.dataset.copied;
           codeEl.textContent = old;
-          codeEl.style.color = "";
+          codeEl.style.color = codeColor(totpSecondsLeft());
         }, 900);
       });
     });
@@ -154,10 +160,16 @@ async function paintCodes() {
 // 每秒只更新圆环/秒数；跨到新窗口(秒数回弹)才重算码
 function tickOTP() {
   const left = totpSecondsLeft();
-  document.querySelectorAll(".otp-ring").forEach((r) => {
-    r.style.cssText = ringStyle(left);
-    const inner = r.querySelector(".otp-ring-inner");
-    if (inner) inner.textContent = left;
+  const col = codeColor(left);
+  document.querySelectorAll(".otp-item").forEach((el) => {
+    const ring = el.querySelector(".otp-ring");
+    if (ring) {
+      ring.style.cssText = ringStyle(left);
+      const inner = ring.querySelector(".otp-ring-inner");
+      if (inner) inner.textContent = left;
+    }
+    const codeEl = el.querySelector(".otp-code");
+    if (codeEl && !codeEl.dataset.copied) codeEl.style.color = col; // 平时蓝、剩5秒红
   });
   if (left > lastLeft) paintCodes(); // 30→...→1→30 回弹，进入新周期
   lastLeft = left;
