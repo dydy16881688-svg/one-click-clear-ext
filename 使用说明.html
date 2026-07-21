@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>一键启动 · 验证器 · 清痕迹 —— 图文使用说明</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 16px 80px; color: #5b5647; line-height: 1.75;
+    font-family: -apple-system, "Microsoft YaHei", sans-serif;
+    background:
+      radial-gradient(1000px 460px at 100% -10%, #fdf3c9 0, transparent 55%),
+      radial-gradient(1000px 460px at -10% 0%, #dceffb 0, transparent 55%),
+      #fffdf4;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  header {
+    text-align: center; margin-bottom: 30px;
+  }
+  header .ico {
+    width: 72px; height: 72px; border-radius: 18px; background: #7fb9df;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 18px rgba(127,185,223,.4); margin-bottom: 12px;
+  }
+  header .ico svg { width: 44px; height: 44px; }
+  h1 { font-size: 24px; color: #5f7d95; margin: 6px 0; }
+  header p { color: #9a927e; font-size: 14px; margin: 0; }
+
+  .step {
+    background: #fffef8; border: 1px solid #f0ead3; border-radius: 20px;
+    padding: 22px 24px; margin: 18px 0; box-shadow: 0 5px 18px rgba(180,170,120,.12);
+  }
+  .step h2 {
+    font-size: 18px; color: #e0688f00; margin: 0 0 12px; display: flex; align-items: center; gap: 12px;
+    color: #5f7d95;
+  }
+  .num {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #a9d4ee, #7fb9df); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800; box-shadow: 0 3px 8px rgba(127,185,223,.4);
+  }
+  .step p { margin: 8px 0; font-size: 14px; }
+  .step ol, .step ul { margin: 8px 0; padding-left: 22px; font-size: 14px; }
+  .step li { margin: 5px 0; }
+  b, strong { color: #d98299; }
+  .key {
+    display: inline-block; background: #fff; border: 1px solid #ddd3b8;
+    border-bottom-width: 2px; border-radius: 6px; padding: 1px 8px;
+    font-size: 12.5px; font-family: monospace; color: #6a6350; margin: 0 2px;
+  }
+  .tip {
+    background: #eef7fd; border: 1px solid #d5e9f5; border-radius: 12px;
+    padding: 10px 14px; font-size: 13px; color: #4a7a96; margin: 12px 0;
+  }
+  .warn {
+    background: #fdf6df; border: 1px solid #f2e3ad; border-radius: 12px;
+    padding: 10px 14px; font-size: 13px; color: #8a7526; margin: 12px 0;
+  }
+
+  /* ---- 界面示意图 ---- */
+  .mock { margin: 14px 0; }
+  .mockcap { font-size: 11.5px; color: #b6ac8e; text-align: center; margin-top: 6px; }
+  .browserbar {
+    display: flex; align-items: center; gap: 8px; background: #f1f3f4;
+    border: 1px solid #e0e0e0; border-radius: 10px 10px 0 0; padding: 8px 12px;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .addr {
+    flex: 1; background: #fff; border-radius: 20px; padding: 5px 12px;
+    font-family: monospace; font-size: 12px; color: #555; border: 1px solid #e0e0e0;
+  }
+  .panelbox {
+    border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;
+    background: #fafafa; padding: 14px;
+  }
+  .flex { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .btn-outline {
+    border: 1px solid #1a73e8; color: #1a73e8; background: #fff;
+    border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; display: inline-block;
+  }
+  .toggle {
+    width: 40px; height: 22px; border-radius: 11px; background: #1a73e8; position: relative; display: inline-block;
+  }
+  .toggle::after { content:""; position:absolute; right:2px; top:2px; width:18px; height:18px; border-radius:50%; background:#fff; }
+  .toggle-label { font-size: 13px; color: #444; }
+
+  /* 弹窗示意 */
+  .popup {
+    width: 300px; margin: 0 auto; background: #fffdf4; border: 1px solid #eee;
+    border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,.12);
+  }
+  .ptabs { display: flex; border-bottom: 1px solid #f0ead3; }
+  .ptab { flex: 1; text-align: center; padding: 10px 0; font-size: 13px; color: #9a927e; }
+  .ptab.on { color: #4a9bc4; font-weight: 700; box-shadow: inset 0 -2px 0 #7fb9df; }
+  .pbody { padding: 14px; }
+  .bigbtn {
+    background: linear-gradient(135deg, #a9d4ee, #7fb9df); color: #fff; text-align: center;
+    padding: 12px; border-radius: 12px; font-weight: 700; font-size: 15px;
+  }
+  .otpcard {
+    background: #fffef8; border: 1px solid #f0ead3; border-radius: 14px; padding: 10px 14px;
+    display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
+    box-shadow: 0 2px 8px rgba(180,170,120,.13);
+  }
+  .otpcard .lbl { font-size: 11px; color: #9a927e; }
+  .otpcard .code { font-size: 24px; font-weight: 700; color: #2f7cf6; letter-spacing: 2px; }
+  .ring2 { width: 24px; height: 24px; border-radius: 50%; background: conic-gradient(#2f7cf6 220deg, #ececec 0); }
+
+  .toc { background:#fffef8; border:1px solid #f0ead3; border-radius:16px; padding:16px 22px; margin-bottom: 8px; }
+  .toc a { color:#4a9bc4; text-decoration:none; font-size:14px; }
+  .toc a:hover { text-decoration: underline; }
+  .toc li { margin: 4px 0; }
+  footer { text-align:center; color:#b6ac8e; font-size:12px; margin-top:30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="ico">
+      <svg viewBox="0 0 100 100"><g fill="#fff">
+        <polygon points="48,35 20,41 20,69 48,63" /><polygon points="52,35 80,41 80,69 52,63" />
+      </g></svg>
+    </div>
+    <h1>一键启动 · 验证器 · 清痕迹</h1>
+    <p>图文使用说明 · 从下载安装到日常使用</p>
+  </header>
+
+  <div class="toc">
+    <b style="color:#5f7d95;">目录</b>
+    <ul>
+      <li><a href="#s1">① 下载并解压</a></li>
+      <li><a href="#s2">② 安装插件到 Chrome</a></li>
+      <li><a href="#s3">③ 把图标固定到工具栏</a></li>
+      <li><a href="#s4">④ 设置主密码（保护你的资料）</a></li>
+      <li><a href="#s5">⑤ 设置账号密码 + 网址</a></li>
+      <li><a href="#s6">⑥ 从手机导入验证器</a></li>
+      <li><a href="#s7">⑦ 日常使用</a></li>
+      <li><a href="#s8">⑧ 以后怎么更新</a></li>
+      <li><a href="#s9">⑨ 安全提醒 & 常见问题</a></li>
+    </ul>
+  </div>
+
+  <!-- 1 -->
+  <div class="step" id="s1">
+    <h2><span class="num">1</span> 下载并解压</h2>
+    <ol>
+      <li>拿到 <b>one-click-clear-ext.zip</b> 这个压缩档。</li>
+      <li>在档案上按<b>右键 → 全部解压缩 / Extract All</b>，得到一个资料夹。</li>
+      <li>把这个资料夹放到<b>固定、不会删的位置</b>（例如「文档」里）。</li>
+    </ol>
+    <div class="warn">⚠️ 「下载」和「解压」是两回事。双击 zip 只是预览，<b>一定要真的「全部解压缩」</b>出一个资料夹，Chrome 才装得起来。装好后也<b>别删、别移动</b>这个资料夹，否则插件会失效。</div>
+    <div class="tip">✅ 判断解压成功：进那个资料夹，应该能看到 <span class="key">manifest.json</span> 这个档案。</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="step" id="s2">
+    <h2><span class="num">2</span> 安装插件到 Chrome</h2>
+    <ol>
+      <li>Chrome 网址栏输入 <span class="key">chrome://extensions</span> 按 Enter。</li>
+      <li>打开右上角的 <b>开发者模式</b> 开关。</li>
+      <li>点左上角 <b>载入未封装项目</b>，选刚才解压出来的资料夹。</li>
+      <li>选资料夹时中间显示空白是<b>正常的</b>（这个窗只显示子资料夹）——直接点<b>选择资料夹</b>即可。</li>
+    </ol>
+
+    <div class="mock">
+      <div class="browserbar">
+        <div class="dot" style="background:#f96"></div><div class="dot" style="background:#fc5"></div><div class="dot" style="background:#6c6"></div>
+        <div class="addr">chrome://extensions</div>
+      </div>
+      <div class="panelbox">
+        <div class="flex">
+          <span class="btn-outline">载入未封装项目</span>
+          <span class="btn-outline">封装扩充功能</span>
+          <span style="flex:1"></span>
+          <span class="toggle-label">开发者模式 </span><span class="toggle"></span>
+        </div>
+      </div>
+      <div class="mockcap">▲ chrome://extensions 画面：先开右边「开发者模式」，再点左边「载入未封装项目」</div>
+    </div>
+    <div class="tip">若跳出<b>红字错误</b>，多半是没解压/选错资料夹（要选到有 manifest.json 的那层）。</div>
+  </div>
+
+  <!-- 3 -->
+  <div class="step" id="s3">
+    <h2><span class="num">3</span> 把图标固定到工具栏</h2>
+    <p>装好后，点 Chrome 右上角的<b>拼图图标 🧩</b>，找到本插件，点旁边的<b>图钉 📌</b>把它固定到工具栏，之后点一下蓝色小图标就能用。</p>
+  </div>
+
+  <!-- 4 -->
+  <div class="step" id="s4">
+    <h2><span class="num">4</span> 设置主密码（保护你的资料）</h2>
+    <p>第一次用<b>先设主密码</b>：点图标 → 若没要求解锁，点 <b>⚙ 设置</b> 进设置页 → 最上面 <b>🔒 主密码</b>。</p>
+    <ol>
+      <li>输入<b>新主密码</b>两次（可点 👁 查看输入内容）。</li>
+      <li>点 <b>设置主密码</b>。之后你的账密和验证器会<b>加密存储</b>。</li>
+      <li>以后每次打开插件，要先输入主密码解锁。</li>
+    </ol>
+    <div class="warn">⚠️ 主密码<b>忘记无法找回</b>（这正是它安全的原因），只能重设（会清空已存账密/验证器）。请务必记牢。</div>
+  </div>
+
+  <!-- 5 -->
+  <div class="step" id="s5">
+    <h2><span class="num">5</span> 设置账号密码 + 网址</h2>
+    <p>在设置页：</p>
+    <ul>
+      <li><b>① 账号密码设定</b>：填一组「默认账号密码」（大部分网站共用）。密码栏可点 👁 查看。若某些网站不同，点「+ 加一组账号密码」再建。</li>
+      <li><b>② 一键打开的网址</b>：每行填 <b>名称 / 分类 / 网址 / 用哪组账密</b>。全用同一组就都选「默认账密」；不想自动填就选「不填账号密码」。</li>
+      <li>填完点最下面 <b>💾 保存全部</b>。</li>
+    </ul>
+    <div class="tip">分类相同的网址会归成一组，之后在插件里能「按分类打开」。</div>
+  </div>
+
+  <!-- 6 -->
+  <div class="step" id="s6">
+    <h2><span class="num">6</span> 从手机导入验证器（Google Authenticator）</h2>
+    <p><b>📱 手机操作：</b>打开 Google Authenticator → 左上角 ☰ → 转移帐户 → 汇出帐户 → 选择账号并生成 QR CODE。</p>
+    <div class="warn">⚠️ 汇出后请选<b>「保留已汇出的帐户」</b>，否则手机端验证码会被清空！</div>
+    <p><b>💻 电脑操作：</b>在设置页「③ 从手机批量导入验证器」：</p>
+    <ol>
+      <li>把手机 QR 截图<b>用「传文件 / 原图」</b>方式传到电脑（<b>别用微信/Telegram 图片压缩发送</b>，会读不到）。</li>
+      <li>点「选择档案」选那张图，<b>或点虚线框按 <span class="key">Ctrl</span>+<span class="key">V</span> 粘贴</b>。</li>
+      <li>点「解析并导入到下方列表」→ 核对 → <b>💾 保存全部</b>。</li>
+    </ol>
+    <div class="tip">账号多时 Google 会生成<b>多张 QR</b>（如「共 2 个」），一张张分次导入即可，会累加。</div>
+  </div>
+
+  <!-- 7 -->
+  <div class="step" id="s7">
+    <h2><span class="num">7</span> 日常使用</h2>
+    <p>点工具栏图标（有主密码会先解锁），有三个分页：</p>
+
+    <div class="mock">
+      <div class="popup">
+        <div class="ptabs"><div class="ptab on">🚀 启动</div><div class="ptab">🔐 验证器</div><div class="ptab">🧹 清理</div></div>
+        <div class="pbody"><div class="bigbtn">🚀 一键打开全部</div></div>
+      </div>
+      <div class="mockcap">▲ 🚀 启动：一键打开所有网址，并自动填入账密（自己按登录）</div>
+    </div>
+
+    <div class="mock">
+      <div class="popup">
+        <div class="ptabs"><div class="ptab">🚀 启动</div><div class="ptab on">🔐 验证器</div><div class="ptab">🧹 清理</div></div>
+        <div class="pbody">
+          <div class="otpcard"><div><div class="lbl">Google (帐号)</div><div class="code">357 539</div></div><div class="ring2"></div></div>
+        </div>
+      </div>
+      <div class="mockcap">▲ 🔐 验证器：显示动态码，平时蓝色、剩 5 秒变红；<b>点卡片即复制</b></div>
+    </div>
+
+    <ul>
+      <li><b>🚀 启动</b>：点「一键打开全部」→ 所有网址开好、自动填账密（你自己按登录）；分类多时可「打开本类」。</li>
+      <li><b>🔐 验证器</b>：需要两步验证时，点对应卡片<b>复制 6 位动态码</b>，贴到网站。</li>
+      <li><b>🧹 清理</b>：勾选要清的项 → 一键执行。预设会「彻底清空 + 登出所有网站（含 Google）」。</li>
+    </ul>
+    <div class="tip">💡 清理只清「浏览痕迹和登录状态」，<b>不会清掉你在插件里的账密/验证器设定</b>（那些有加密保存，且随 Google 帐号同步）。</div>
+  </div>
+
+  <!-- 8 -->
+  <div class="step" id="s8">
+    <h2><span class="num">8</span> 以后怎么更新</h2>
+    <p>作者更新后，双击资料夹里的 <b>更新.bat</b> → 自动下载最新版覆盖 → 再到 <span class="key">chrome://extensions</span> 点该插件的<b>刷新 ↻</b> 即可。</p>
+    <div class="tip">第一次双击 <span class="key">更新.bat</span> 若跳 Windows 蓝框，点「更多信息 → 仍要运行」。它不会动你存的账密/验证器。</div>
+  </div>
+
+  <!-- 9 -->
+  <div class="step" id="s9">
+    <h2><span class="num">9</span> 安全提醒 &amp; 常见问题</h2>
+    <ul>
+      <li><b>主密码忘了？</b> 无法找回，只能在设置页「忘记 · 重设」（会清空已存账密/验证器）。</li>
+      <li><b>换电脑 / 重开机资料还在吗？</b> 登入你自己的 <b>Google 帐号并开同步</b>，设定会自动跟着回来。</li>
+      <li><b>更安全：</b> 建议再设 Chrome「同步密语」(<span class="key">chrome://settings/syncSetup/advanced</span>) 做端到端加密；电脑设开机密码、离开按 <span class="key">Win</span>+<span class="key">L</span> 锁屏。</li>
+      <li><b>最重要的帐号</b>（如 Google 主帐号本身）建议<b>别</b>把密码+验证器都放进插件，验证器留在手机当第二道锁。</li>
+    </ul>
+  </div>
+
+  <footer>一键启动 · 验证器 · 清痕迹　|　本说明可直接分享给同事</footer>
+</div>
+</body>
+</html>
