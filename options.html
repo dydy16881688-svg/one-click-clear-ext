@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <title>设置</title>
+  <style>
+    body {
+      max-width: 720px; margin: 30px auto; padding: 0 20px;
+      font-family: -apple-system, "Microsoft YaHei", sans-serif; color: #1a1a1a;
+    }
+    h2 { font-size: 17px; margin: 26px 0 8px; }
+    p.desc { font-size: 13px; color: #666; margin: 4px 0 10px; line-height: 1.6; }
+    input, select, textarea {
+      padding: 8px; font-size: 13px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;
+    }
+    textarea { width: 100%; min-height: 60px; font-family: monospace; }
+    button {
+      padding: 8px 16px; font-size: 13px; font-weight: 600; color: #fff;
+      background: #1a73e8; border: none; border-radius: 6px; cursor: pointer;
+    }
+    button:hover { background: #1558b0; }
+    button.del { background: #d33; padding: 8px 12px; }
+    button.save { background: #2e7d32; margin-top: 10px; font-size: 15px; padding: 12px 28px; }
+    button.ghost { background: #666; }
+
+    .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .cred-row .clabel { width: 120px; }
+    .cred-row .cuser  { flex: 1; }
+    .cred-row .cpass  { flex: 1; }
+    .url-row .ucat  { width: 110px; }
+    .url-row .uurl  { flex: 1; }
+    .url-row .ucred { width: 150px; }
+
+    .head { display: flex; gap: 10px; font-size: 11px; color: #999; margin-bottom: 4px; }
+
+    #saved { color: #2e7d32; font-size: 14px; margin-left: 12px; }
+    #importMsg { font-size: 13px; margin-top: 8px; }
+    .card { background: #f7f9ff; border: 1px solid #d6e0ff; border-radius: 10px; padding: 14px; margin-top: 8px; }
+    .steps { font-size: 12px; color: #555; line-height: 1.7; margin: 6px 0 12px; }
+    .warn { background: #fff3e0; border: 1px solid #ffcc80; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #a15c00; line-height: 1.6; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <h1 style="font-size:20px">插件设置</h1>
+
+  <div class="warn">
+    ⚠️ 帐号密码、验证器密钥都会<b>明文存在这台电脑</b>（浏览器本机，未加密）。请给电脑设开机密码、别在公用电脑用、别把带密码的设定分享给别人。
+  </div>
+
+  <h2>① 帐密组</h2>
+  <p class="desc">
+    先建一组「默认帐密」，大部分网站都用它。若某些网站帐密不同，点「+ 加一组帐密」再建，然后在下面②给那些网址选对应的组。
+  </p>
+  <div class="row head">
+    <span style="width:120px">名称</span><span style="flex:1">帐号</span><span style="flex:1">密码</span><span style="width:44px"></span>
+  </div>
+  <div id="credRows"></div>
+  <button id="addCred" class="ghost">+ 加一组帐密</button>
+
+  <h2>② 一键打开的网址（可分类 + 选帐密）</h2>
+  <p class="desc">
+    分类相同的会归成一组，插件里能「按分类打开」。帐密栏选要用哪组；选「不填帐密」就只开不填。
+  </p>
+  <div class="row head">
+    <span style="width:110px">分类</span><span style="flex:1">网址（含 https://）</span><span style="width:150px">用哪组帐密</span><span style="width:44px"></span>
+  </div>
+  <div id="urlRows"></div>
+  <button id="addUrl" class="ghost">+ 加一个网址</button>
+
+  <h2>③ 从手机批量导入验证器</h2>
+  <div class="card">
+    <div class="steps">
+      <b>手机 Google Authenticator：</b>右上角 ⋮ →「转移账户」→「导出账户」→ 勾选 → 生成 QR。<br />
+      把 QR 截图用「<b>传文件 / 原图</b>」方式传到电脑（别用微信/Telegram 压缩发送），然后：
+    </div>
+    <input type="file" id="qrFile" accept="image/*" />
+    <div id="pasteZone" style="margin-top:10px; border:2px dashed #9db8ff; border-radius:10px; padding:18px; text-align:center; color:#5573c7; font-size:13px; cursor:pointer; background:#fff;" tabindex="0">
+      📋 点这里，然后按 <b>Ctrl+V</b> 直接粘贴 QR 图片
+      <div id="pastePreview" style="margin-top:8px;"></div>
+    </div>
+    <div style="margin-top:10px" class="steps">或直接粘贴 QR 文字（otpauth-migration:// 或 otpauth://）：</div>
+    <textarea id="qrText" placeholder="otpauth-migration://offline?data=..."></textarea>
+    <div style="margin-top:8px"><button id="importBtn">解析并导入到下方列表</button></div>
+    <div id="importMsg"></div>
+  </div>
+
+  <h2>④ 验证器账户（可手动增删改）</h2>
+  <p class="desc">导入的账户会出现在这里。label = 名字；secret = base32 密钥。</p>
+  <div id="otpRows"></div>
+  <button id="addOtp" class="ghost">+ 加一行</button>
+
+  <br /><br />
+  <button class="save" id="save">保存全部</button>
+  <span id="saved"></span>
+
+  <script src="jsqr.js"></script>
+  <script src="migration.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

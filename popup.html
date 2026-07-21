@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body {
+      width: 300px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, "Microsoft YaHei", sans-serif;
+      color: #1a1a1a;
+    }
+    .tabs { display: flex; border-bottom: 1px solid #eee; }
+    .tab {
+      flex: 1; text-align: center; padding: 10px 0;
+      font-size: 13px; cursor: pointer; color: #666;
+    }
+    .tab.active { color: #d33; font-weight: 600; box-shadow: inset 0 -2px 0 #d33; }
+    .panel { padding: 14px; display: none; }
+    .panel.active { display: block; }
+
+    button.primary {
+      width: 100%; padding: 12px; margin-top: 6px;
+      font-size: 15px; font-weight: 600; color: #fff;
+      background: #d33; border: none; border-radius: 8px; cursor: pointer;
+    }
+    button.primary:hover { background: #b71c1c; }
+    .cat-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; margin-top: 8px;
+    }
+    .cat-name { font-size: 13px; color: #333; }
+    .cat-count { font-size: 11px; color: #999; }
+    button.sec {
+      padding: 7px 14px; font-size: 13px; color: #d33; background: #fff;
+      border: 1px solid #d33; border-radius: 7px; cursor: pointer; white-space: nowrap;
+    }
+    button.sec:hover { background: #fde8e8; }
+
+    .opt { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 13px; }
+    .opt input { width: 16px; height: 16px; }
+
+    /* 验证器 */
+    .otp-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px; margin-bottom: 6px; background: #f7f7f7; border-radius: 8px;
+    }
+    .otp-label { font-size: 12px; color: #555; }
+    .otp-code { font-size: 20px; font-weight: 700; letter-spacing: 2px; font-family: monospace; }
+    .otp-right { display: flex; align-items: center; gap: 8px; }
+    .otp-left { display: flex; flex-direction: column; }
+    .ring { font-size: 11px; color: #999; }
+    .copy {
+      padding: 4px 10px; font-size: 12px; border: 1px solid #ccc;
+      background: #fff; border-radius: 6px; cursor: pointer;
+    }
+    .copy:hover { background: #eee; }
+
+    .hint { font-size: 11px; color: #999; margin-top: 10px; line-height: 1.5; }
+    .link { color: #1a73e8; cursor: pointer; text-decoration: underline; font-size: 12px; }
+    #status { margin-top: 10px; font-size: 12px; min-height: 16px; text-align: center; }
+    .empty { font-size: 12px; color: #999; text-align: center; padding: 12px 0; }
+  </style>
+</head>
+<body>
+  <div class="tabs">
+    <div class="tab active" data-tab="launch">🚀 启动</div>
+    <div class="tab" data-tab="otp">🔐 验证器</div>
+    <div class="tab" data-tab="clear">🧹 清理</div>
+  </div>
+
+  <!-- 启动 -->
+  <div class="panel active" id="panel-launch">
+    <button class="primary" id="openAll">🚀 一键打开全部</button>
+    <div id="cats"></div>
+    <div id="urlCount" class="hint"></div>
+    <div style="margin-top:8px"><span class="link" id="toOptions1">⚙ 设置网址 / 帐密</span></div>
+
+    <label class="opt" style="margin-top:14px; border-top:1px solid #eee; padding-top:12px;">
+      <input type="checkbox" id="forceFont" />
+      强制所有网站用微软正黑体
+    </label>
+    <div class="hint">开/关会即时套用（可能要刷新已开的分页）。</div>
+  </div>
+
+  <!-- 验证器 -->
+  <div class="panel" id="panel-otp">
+    <div id="otpList"></div>
+    <div style="margin-top:8px"><span class="link" id="toOptions2">⚙ 管理验证器</span></div>
+  </div>
+
+  <!-- 清理 -->
+  <div class="panel" id="panel-clear">
+    <label class="opt"><input type="checkbox" id="cookies" checked /> 登出所有网站（清 cookie，含 Google）</label>
+    <label class="opt"><input type="checkbox" id="history" checked /> 浏览历史</label>
+    <label class="opt"><input type="checkbox" id="cache" checked /> 快取 Cache</label>
+    <label class="opt"><input type="checkbox" id="downloads" /> 下载记录</label>
+    <button class="primary" id="run" style="margin-top:12px">一键执行</button>
+    <div id="status"></div>
+  </div>
+
+  <script src="totp.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
