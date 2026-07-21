@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "一键启动 · 验证器 · 清痕迹",
-  "version": "4.3.0",
+  "name": "一键打开/验证器/清理小工具",
+  "version": "4.4.0",
   "description": "一键打开常用网址（Chrome 自动填帐密）、谷歌验证器动态码一键复制、一键登出+清浏览痕迹。",
 
   "permissions": [
@@ -30,7 +30,7 @@
   ],
 
   "action": {
-    "default_title": "一键启动 · 验证器 · 清痕迹",
+    "default_title": "一键打开/验证器/清理小工具",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

@@ -194,6 +194,7 @@ async function saveNonSecret() {
 
 // ===== 主密码面板 =====
 let LOCKED = false;
+let pageUnlocked = false; // 设置页每次打开都要重新输入主密码（不吃弹窗那边的缓存）
 function mpMsg(t, color) {
   const m = document.getElementById("mpMsg");
   if (m) { m.textContent = t; m.style.color = color || "#666"; }
@@ -239,18 +240,20 @@ async function onSetMaster() {
   const { creds, totp } = collectSecrets();
   await createVault(a, { creds, totp });
   await saveNonSecret();
+  pageUnlocked = true;
   mpMsg("✅ 已设置主密码，帐密与验证器已加密", "#2e7d32");
   await load();
 }
 async function onUnlock() {
   const pw = document.getElementById("mpUnlock").value;
   if (!pw) return mpMsg("请输入主密码", "#d33");
-  try { await unlockVault(pw); await load(); }
+  try { await unlockVault(pw); pageUnlocked = true; await load(); }
   catch (e) { mpMsg("主密码错误", "#d33"); }
 }
 async function onReset() {
   if (!confirm("确定重设主密码？这会清空已存的帐号密码和验证器，无法找回！")) return;
   await resetVault();
+  pageUnlocked = false;
   await load();
 }
 async function onChangeMaster() {
@@ -268,7 +271,8 @@ async function load() {
   buildIconPicks();
 
   if (store.vault) {
-    const key = await getSessionKey();
+    // 只认「本次设置页已解锁」，不吃弹窗缓存 → 每次打开设置页都要输主密码
+    const key = pageUnlocked ? await getSessionKey() : null;
     if (key) {
       const data = await decryptObj(key, store.vault.iv, store.vault.ct);
       renderCreds(data.creds);
