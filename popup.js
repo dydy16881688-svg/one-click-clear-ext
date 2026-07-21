@@ -80,63 +80,94 @@ forceFontEl.addEventListener("change", () => {
   chrome.storage.local.set({ forceFont: forceFontEl.checked });
 });
 
-// ===== 验证器：显示动态码 + 复制 =====
+// ===== 验证器：白卡片 + 圆环倒数，点卡片复制 =====
 let otpTimer = null;
+let otpData = [];
+let lastLeft = 0;
 
+function ringStyle(left) {
+  const deg = (left / 30) * 360;
+  return `background:conic-gradient(#eb6a56 ${deg}deg, #ececec 0)`;
+}
+
+// 重画整份列表（含算码）
 async function renderOTP() {
   const { totp = [] } = await chrome.storage.local.get("totp");
-  const list = document.getElementById("otpList");
+  otpData = totp;
+  await paintCodes();
+}
 
-  if (!totp.length) {
+// 算码并渲染卡片
+async function paintCodes() {
+  const list = document.getElementById("otpList");
+  if (!otpData.length) {
     list.innerHTML = '<div class="empty">还没加验证器<br>点下面「管理验证器」添加</div>';
     return;
   }
-
   const left = totpSecondsLeft();
   const rows = await Promise.all(
-    totp.map(async (item) => {
-      let code = "------";
+    otpData.map(async (item) => {
+      let raw = "", code = "------";
       try {
-        code = await generateTOTP(item.secret);
-        code = code.slice(0, 3) + " " + code.slice(3); // 分组好读
+        raw = await generateTOTP(item.secret);
+        code = raw.slice(0, 3) + " " + raw.slice(3);
       } catch (e) {
         code = "密钥错误";
       }
-      return { label: item.label, code };
+      return { label: item.label, code, raw };
     })
   );
 
   list.innerHTML = rows
     .map(
       (r, i) => `
-      <div class="otp-item">
+      <div class="otp-item" data-i="${i}">
         <div class="otp-left">
           <span class="otp-label">${escapeHtml(r.label)}</span>
           <span class="otp-code">${r.code}</span>
         </div>
-        <div class="otp-right">
-          <span class="ring">${left}s</span>
-          <button class="copy" data-i="${i}">复制</button>
+        <div class="otp-ring" style="${ringStyle(left)}">
+          <span class="otp-ring-inner">${left}</span>
         </div>
       </div>`
     )
     .join("");
 
-  list.querySelectorAll(".copy").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const raw = rows[btn.dataset.i].code.replace(/\s/g, "");
+  list.querySelectorAll(".otp-item").forEach((el) => {
+    el.addEventListener("click", () => {
+      const raw = rows[el.dataset.i].raw;
+      if (!raw) return;
       navigator.clipboard.writeText(raw).then(() => {
-        btn.textContent = "已复制✓";
-        setTimeout(() => (btn.textContent = "复制"), 1200);
+        const codeEl = el.querySelector(".otp-code");
+        const old = codeEl.textContent;
+        codeEl.textContent = "已复制 ✓";
+        codeEl.style.color = "#2e7d32";
+        setTimeout(() => {
+          codeEl.textContent = old;
+          codeEl.style.color = "";
+        }, 900);
       });
     });
   });
 }
 
-// 进入验证器分页时启动每秒刷新
+// 每秒只更新圆环/秒数；跨到新窗口(秒数回弹)才重算码
+function tickOTP() {
+  const left = totpSecondsLeft();
+  document.querySelectorAll(".otp-ring").forEach((r) => {
+    r.style.cssText = ringStyle(left);
+    const inner = r.querySelector(".otp-ring-inner");
+    if (inner) inner.textContent = left;
+  });
+  if (left > lastLeft) paintCodes(); // 30→...→1→30 回弹，进入新周期
+  lastLeft = left;
+}
+
+// 进入验证器分页时启动
 document.querySelector('[data-tab="otp"]').addEventListener("click", () => {
   renderOTP();
-  if (!otpTimer) otpTimer = setInterval(renderOTP, 1000);
+  lastLeft = totpSecondsLeft();
+  if (!otpTimer) otpTimer = setInterval(tickOTP, 1000);
 });
 
 function escapeHtml(s) {

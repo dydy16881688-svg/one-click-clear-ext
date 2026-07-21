@@ -55,11 +55,12 @@ function refreshCredSelects() {
 document.getElementById("addCred").addEventListener("click", () => addCredRow());
 
 // ===== 网址 =====
-function addUrlRow(category = "", url = "", credId = "") {
+function addUrlRow(name = "", category = "", url = "", credId = "") {
   const row = document.createElement("div");
   row.className = "row url-row";
   row.innerHTML = `
-    <input class="ucat" placeholder="分类，如 后台" value="${escapeAttr(category)}" />
+    <input class="uname" placeholder="名称，如 派单后台" value="${escapeAttr(name)}" />
+    <input class="ucat" placeholder="分类" value="${escapeAttr(category)}" />
     <input class="uurl" placeholder="https://..." value="${escapeAttr(url)}" />
     <select class="ucred"></select>
     <button class="del">删</button>
@@ -72,7 +73,7 @@ function addUrlRow(category = "", url = "", credId = "") {
   if ([...sel.options].some((o) => o.value === credId)) sel.value = credId;
 }
 
-document.getElementById("addUrl").addEventListener("click", () => addUrlRow("", "", defaultCredId()));
+document.getElementById("addUrl").addEventListener("click", () => addUrlRow("", "", "", defaultCredId()));
 
 function defaultCredId() {
   const creds = currentCreds();
@@ -115,10 +116,10 @@ async function load() {
   urlRowsEl.innerHTML = "";
   const def = defaultCredId();
   const normalized = urls.map((u) =>
-    typeof u === "string" ? { url: u, category: "", credId: def } : u
+    typeof u === "string" ? { name: "", url: u, category: "", credId: def } : u
   );
-  if (normalized.length === 0) addUrlRow("", "", def);
-  else normalized.forEach((u) => addUrlRow(u.category || "", u.url || "", u.credId || ""));
+  if (normalized.length === 0) addUrlRow("", "", "", def);
+  else normalized.forEach((u) => addUrlRow(u.name || "", u.category || "", u.url || "", u.credId || ""));
 
   // 验证器
   otpRowsEl.innerHTML = "";
@@ -196,6 +197,7 @@ document.getElementById("save").addEventListener("click", async () => {
 
   const urls = [...urlRowsEl.querySelectorAll(".url-row")]
     .map((r) => ({
+      name: r.querySelector(".uname").value.trim(),
       category: r.querySelector(".ucat").value.trim(),
       url: r.querySelector(".uurl").value.trim(),
       credId: r.querySelector(".ucred").value,
