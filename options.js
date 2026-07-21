@@ -116,7 +116,7 @@ function buildIconPicks() {
 }
 
 async function load() {
-  const store = await chrome.storage.local.get(["creds", "urls", "totp", "iconSymbol"]);
+  const store = await chrome.storage.sync.get(["creds", "urls", "totp", "iconSymbol"]);
   const creds = store.creds || [];
   const urls = store.urls || [];
   const totp = store.totp || [];
@@ -227,7 +227,7 @@ document.getElementById("save").addEventListener("click", async () => {
 
   const iconSymbol = document.getElementById("iconSymbol").value.trim() || "📖";
 
-  await chrome.storage.local.set({ creds, urls, totp, iconSymbol });
+  await chrome.storage.sync.set({ creds, urls, totp, iconSymbol });
   const saved = document.getElementById("saved");
   saved.textContent = `✅ 已保存（${creds.length} 组帐密 / ${urls.length} 网址 / ${totp.length} 验证器）`;
   setTimeout(() => (saved.textContent = ""), 3000);

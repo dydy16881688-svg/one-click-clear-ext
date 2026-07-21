@@ -30,10 +30,26 @@ async function updateActionIcon(symbol) {
   try { await chrome.action.setIcon({ imageData }); } catch (e) {}
 }
 
-// 启动时套用；符号变更时即时更新
-chrome.storage.local.get("iconSymbol", ({ iconSymbol }) => updateActionIcon(iconSymbol));
+// 一次性搬迁：旧版设定存在本机(local)，改用 Google 同步(sync)后把旧资料搬过去
+async function migrateLocalToSync() {
+  const keys = ["creds", "urls", "totp", "iconSymbol", "forceFont"];
+  const sync = await chrome.storage.sync.get(keys);
+  if (keys.some((k) => sync[k] !== undefined)) return; // sync 已有资料，不搬
+  const local = await chrome.storage.local.get(keys);
+  const hasLocal = keys.some((k) => local[k] !== undefined);
+  if (hasLocal) {
+    try { await chrome.storage.sync.set(local); } catch (e) {}
+  }
+}
+
+// 启动时：先搬迁，再套用图标；符号变更时即时更新
+(async () => {
+  await migrateLocalToSync();
+  const { iconSymbol } = await chrome.storage.sync.get("iconSymbol");
+  updateActionIcon(iconSymbol);
+})();
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.iconSymbol) updateActionIcon(changes.iconSymbol.newValue);
+  if (area === "sync" && changes.iconSymbol) updateActionIcon(changes.iconSymbol.newValue);
 });
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {

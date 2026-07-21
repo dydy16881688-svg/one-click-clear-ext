@@ -15,7 +15,7 @@ document.getElementById("toOptions2").addEventListener("click", () => chrome.run
 let ALL_ITEMS = []; // [{url, category, username, password}]
 
 async function loadLaunch() {
-  const { urls = [], creds = [] } = await chrome.storage.local.get(["urls", "creds"]);
+  const { urls = [], creds = [] } = await chrome.storage.sync.get(["urls", "creds"]);
   const credMap = Object.fromEntries(creds.map((c) => [c.id, c]));
 
   ALL_ITEMS = urls
@@ -73,11 +73,11 @@ document.getElementById("openAll").addEventListener("click", () => openItems(ALL
 
 // ===== 强制字型开关 =====
 const forceFontEl = document.getElementById("forceFont");
-chrome.storage.local.get("forceFont", ({ forceFont }) => {
+chrome.storage.sync.get("forceFont", ({ forceFont }) => {
   forceFontEl.checked = forceFont !== false; // 默认开
 });
 forceFontEl.addEventListener("change", () => {
-  chrome.storage.local.set({ forceFont: forceFontEl.checked });
+  chrome.storage.sync.set({ forceFont: forceFontEl.checked });
 });
 
 // ===== 验证器：白卡片 + 圆环倒数，点卡片复制 =====
@@ -96,7 +96,7 @@ function ringStyle(left) {
 
 // 重画整份列表（含算码）
 async function renderOTP() {
-  const { totp = [] } = await chrome.storage.local.get("totp");
+  const { totp = [] } = await chrome.storage.sync.get("totp");
   otpData = totp;
   await paintCodes();
 }

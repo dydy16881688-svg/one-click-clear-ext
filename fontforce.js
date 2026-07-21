@@ -34,13 +34,13 @@ function apply(on) {
 apply(true);
 
 // 再读设置校正（默认 = 开；只有明确存 false 才关）
-chrome.storage.local.get("forceFont", ({ forceFont }) => {
+chrome.storage.sync.get("forceFont", ({ forceFont }) => {
   apply(forceFont !== false);
 });
 
 // 开关变动时实时生效
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.forceFont) {
+  if (area === "sync" && changes.forceFont) {
     apply(changes.forceFont.newValue !== false);
   }
 });
