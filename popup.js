@@ -208,9 +208,11 @@ document.getElementById("run").addEventListener("click", () => {
     statusEl.textContent = "请至少勾选一项";
     return;
   }
+  const logoutGoogle = document.getElementById("logoutGoogle").checked;
+
   statusEl.style.color = "#666";
   statusEl.textContent = "执行中…";
-  chrome.runtime.sendMessage({ type: "CLEAR", dataToRemove }, (resp) => {
+  chrome.runtime.sendMessage({ type: "CLEAR", dataToRemove, logoutGoogle }, (resp) => {
     if (chrome.runtime.lastError) {
       statusEl.style.color = "#d33";
       statusEl.textContent = "出错：" + chrome.runtime.lastError.message;

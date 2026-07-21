@@ -43,13 +43,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     for (const [key, on] of Object.entries(msg.dataToRemove)) {
       if (on) dataToRemove[key] = true;
     }
-    chrome.browsingData.remove({ since: 0 }, dataToRemove, () => {
-      if (chrome.runtime.lastError) {
-        sendResponse({ ok: false, error: chrome.runtime.lastError.message });
-      } else {
-        sendResponse({ ok: true });
-      }
-    });
+
+    const doClear = () => {
+      chrome.browsingData.remove({ since: 0 }, dataToRemove, () => {
+        if (chrome.runtime.lastError) {
+          sendResponse({ ok: false, error: chrome.runtime.lastError.message });
+        } else {
+          sendResponse({ ok: true });
+        }
+      });
+    };
+
+    // 要登出 Google 且会清 cookie：先打开官方登出网址（趁 cookie 还在，服务器端也登出），再清
+    if (msg.logoutGoogle && dataToRemove.cookies) {
+      try {
+        chrome.tabs.create({ url: "https://accounts.google.com/Logout", active: false });
+      } catch (e) {}
+      setTimeout(doClear, 1800);
+    } else {
+      doClear();
+    }
     return true; // 异步
   }
 
