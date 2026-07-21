@@ -13,6 +13,26 @@ function escapeAttr(s) {
   return String(s).replace(/"/g, "&quot;");
 }
 
+// 密码输入框（带 👁 显示/隐藏）
+function pwField(id, ph, width) {
+  return `<span class="pw-wrap" style="width:${width}px;">
+    <input type="password" id="${id}" placeholder="${ph}" style="width:100%; padding-right:34px;" />
+    <button type="button" class="eye" tabindex="-1" title="显示/隐藏密码">👁</button>
+  </span>`;
+}
+
+// 眼睛按钮：显示/隐藏密码（事件委派，涵盖动态生成的栏位）
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest && e.target.closest(".eye");
+  if (!btn) return;
+  const wrap = btn.closest(".pw-wrap");
+  const input = wrap && wrap.querySelector("input");
+  if (!input) return;
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  btn.textContent = show ? "🙈" : "👁";
+});
+
 // ===== 帐密组 =====
 function addCredRow(id = uuid(), label = "", username = "", password = "") {
   const row = document.createElement("div");
@@ -21,7 +41,10 @@ function addCredRow(id = uuid(), label = "", username = "", password = "") {
   row.innerHTML = `
     <input class="clabel" placeholder="如 默认帐密" value="${escapeAttr(label)}" />
     <input class="cuser" placeholder="帐号" value="${escapeAttr(username)}" />
-    <input class="cpass" type="password" placeholder="密码" value="${escapeAttr(password)}" />
+    <span class="pw-wrap" style="flex:1;">
+      <input class="cpass" type="password" placeholder="密码" value="${escapeAttr(password)}" style="width:100%; padding-right:34px;" />
+      <button type="button" class="eye" tabindex="-1" title="显示/隐藏密码">👁</button>
+    </span>
     <button class="del" title="删除">🗑️</button>
   `;
   row.querySelector(".del").addEventListener("click", () => {
@@ -180,8 +203,8 @@ function renderMaster(state) {
   if (state === "novault") {
     box.innerHTML = `
       <div class="row" style="flex-wrap:wrap;">
-        <input type="password" id="mpNew" placeholder="新主密码(至少4位)" style="width:170px" />
-        <input type="password" id="mpNew2" placeholder="再输一次" style="width:150px" />
+        ${pwField("mpNew", "新主密码(至少4位)", 170)}
+        ${pwField("mpNew2", "再输一次", 150)}
         <button id="mpSet" class="ghost">设置主密码</button>
       </div>
       <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;
@@ -189,7 +212,7 @@ function renderMaster(state) {
   } else if (state === "locked") {
     box.innerHTML = `
       <div class="row" style="flex-wrap:wrap;">
-        <input type="password" id="mpUnlock" placeholder="输入主密码解锁" style="width:200px" />
+        ${pwField("mpUnlock", "输入主密码解锁", 200)}
         <button id="mpUnlockBtn" class="ghost">解锁</button>
         <button id="mpReset" class="del" style="border-radius:999px;">忘记 · 重设</button>
       </div>
@@ -200,8 +223,8 @@ function renderMaster(state) {
     box.innerHTML = `
       <div style="font-size:13px;color:#3bb98f;font-weight:700;margin-bottom:8px;">✅ 已解锁（可编辑下方帐密/验证器）</div>
       <div class="row" style="flex-wrap:wrap;">
-        <input type="password" id="mpChg" placeholder="修改主密码：新密码" style="width:170px" />
-        <input type="password" id="mpChg2" placeholder="再输一次" style="width:150px" />
+        ${pwField("mpChg", "修改主密码：新密码", 170)}
+        ${pwField("mpChg2", "再输一次", 150)}
         <button id="mpChange" class="ghost">修改主密码</button>
       </div>
       <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;

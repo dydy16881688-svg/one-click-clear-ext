@@ -15,6 +15,18 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
+// 眼睛按钮：显示/隐藏密码
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest && e.target.closest(".eye");
+  if (!btn) return;
+  const wrap = btn.closest(".pw-wrap");
+  const input = wrap && wrap.querySelector("input");
+  if (!input) return;
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  btn.textContent = show ? "🙈" : "👁";
+});
+
 // ===== 解锁 / 主密码 =====
 let SECRETS = { creds: [], totp: [] }; // 解密后的帐密与验证器
 

@@ -85,6 +85,11 @@
     .link { color: #4a9bc4; cursor: pointer; text-decoration: underline; font-size: 12px; }
     #status { margin-top: 10px; font-size: 12px; min-height: 16px; text-align: center; }
     .empty { font-size: 12px; color: #b6ac8e; text-align: center; padding: 12px 0; }
+    .pw-wrap { position: relative; display: inline-flex; }
+    .eye {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      border: none; background: none; cursor: pointer; font-size: 15px; padding: 0; line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -92,8 +97,11 @@
   <div id="lockScreen" style="display:none; padding:26px 18px; text-align:center;">
     <div style="font-size:36px; margin-bottom:6px;">🔒</div>
     <div style="font-size:14px; color:#5b5647; margin-bottom:14px;">输入主密码解锁</div>
-    <input type="password" id="unlockPw" placeholder="主密码"
-      style="width:82%; padding:11px; border:1.5px solid #ece3c8; border-radius:10px; font-size:14px; text-align:center;" />
+    <span class="pw-wrap" style="width:82%;">
+      <input type="password" id="unlockPw" placeholder="主密码"
+        style="width:100%; padding:11px 34px 11px 11px; border:1.5px solid #ece3c8; border-radius:10px; font-size:14px; text-align:center;" />
+      <button type="button" class="eye" tabindex="-1" title="显示/隐藏密码">👁</button>
+    </span>
     <div id="unlockMsg" style="color:#d33; font-size:12px; min-height:16px; margin:6px 0;"></div>
     <button class="primary" id="unlockBtn" style="width:82%; margin:0 auto;">解锁</button>
     <div class="hint" style="text-align:center;">忘记主密码？可在设置页重设（会清空已存帐密/验证器）</div>
