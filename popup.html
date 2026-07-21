@@ -88,6 +88,18 @@
   </style>
 </head>
 <body>
+  <!-- 主密码解锁画面 -->
+  <div id="lockScreen" style="display:none; padding:26px 18px; text-align:center;">
+    <div style="font-size:36px; margin-bottom:6px;">🔒</div>
+    <div style="font-size:14px; color:#5b5647; margin-bottom:14px;">输入主密码解锁</div>
+    <input type="password" id="unlockPw" placeholder="主密码"
+      style="width:82%; padding:11px; border:1.5px solid #ece3c8; border-radius:10px; font-size:14px; text-align:center;" />
+    <div id="unlockMsg" style="color:#d33; font-size:12px; min-height:16px; margin:6px 0;"></div>
+    <button class="primary" id="unlockBtn" style="width:82%; margin:0 auto;">解锁</button>
+    <div class="hint" style="text-align:center;">忘记主密码？可在设置页重设（会清空已存帐密/验证器）</div>
+  </div>
+
+  <div id="appWrap">
   <div class="tabs">
     <div class="tab active" data-tab="launch">🚀 启动</div>
     <div class="tab" data-tab="otp">🔐 验证器</div>
@@ -99,7 +111,10 @@
     <button class="primary" id="openAll">🚀 一键打开全部</button>
     <div id="cats"></div>
     <div id="urlCount" class="hint"></div>
-    <div style="margin-top:8px"><span class="link" id="toOptions1">⚙ 设置网址 / 帐密</span></div>
+    <div style="margin-top:8px">
+      <span class="link" id="toOptions1">⚙ 设置网址 / 帐密</span>
+      <span class="link" id="lockNow" style="display:none; margin-left:10px;">🔒 锁定</span>
+    </div>
 
     <label class="opt" style="margin-top:14px; border-top:1px solid #f0ead3; padding-top:12px;">
       <input type="checkbox" id="forceFont" />
@@ -129,8 +144,10 @@
     <button class="primary" id="run" style="margin-top:12px">一键执行</button>
     <div id="status"></div>
   </div>
+  </div><!-- /appWrap -->
 
   <script src="totp.js"></script>
+  <script src="vault.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

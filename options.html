@@ -104,6 +104,12 @@
 <body>
   <h1>⚙️ 插件设置</h1>
 
+  <section class="panel" id="masterPanel">
+    <h2>🔒 主密码</h2>
+    <p class="desc">设置主密码后，帐号密码与验证器会<b>加密存储</b>，打开插件要先输入主密码才能查看/使用。忘记只能重设（会清空已存帐密/验证器），无法找回。</p>
+    <div id="masterBody"></div>
+  </section>
+
   <section class="panel">
     <h2>🔑 ① 账号密码设定</h2>
     <p class="desc">
@@ -174,6 +180,7 @@
 
   <script src="jsqr.js"></script>
   <script src="migration.js"></script>
+  <script src="vault.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

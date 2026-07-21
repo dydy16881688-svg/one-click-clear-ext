@@ -115,33 +115,157 @@ function buildIconPicks() {
   );
 }
 
-async function load() {
-  const store = await chrome.storage.sync.get(["creds", "urls", "totp", "iconSymbol"]);
-  const creds = store.creds || [];
-  const urls = store.urls || [];
-  const totp = store.totp || [];
-
-  document.getElementById("iconSymbol").value = store.iconSymbol || "📖";
-  buildIconPicks();
-
-  // 帐密组
+// ===== 渲染各区 =====
+function renderCreds(creds) {
   credRowsEl.innerHTML = "";
-  if (creds.length === 0) addCredRow(uuid(), "默认帐密", "", "");
+  if (!creds || creds.length === 0) addCredRow(uuid(), "默认帐密", "", "");
   else creds.forEach((c) => addCredRow(c.id, c.label, c.username, c.password));
-
-  // 网址（兼容旧版：纯字符串数组）
+}
+function renderUrls(urls) {
   urlRowsEl.innerHTML = "";
   const def = defaultCredId();
-  const normalized = urls.map((u) =>
+  const normalized = (urls || []).map((u) =>
     typeof u === "string" ? { name: "", url: u, category: "", credId: def } : u
   );
   if (normalized.length === 0) addUrlRow("", "", "", def);
   else normalized.forEach((u) => addUrlRow(u.name || "", u.category || "", u.url || "", u.credId || ""));
-
-  // 验证器
+}
+function renderOtpList(totp) {
   otpRowsEl.innerHTML = "";
-  if (totp.length === 0) addOtpRow("", "");
+  if (!totp || totp.length === 0) addOtpRow("", "");
   else totp.forEach((t) => addOtpRow(t.label, t.secret));
+}
+
+// ===== 收集表单资料 =====
+function collectSecrets() {
+  const creds = [...credRowsEl.querySelectorAll(".cred-row")]
+    .map((r) => ({
+      id: r.dataset.id,
+      label: r.querySelector(".clabel").value.trim(),
+      username: r.querySelector(".cuser").value,
+      password: r.querySelector(".cpass").value,
+    }))
+    .filter((c) => c.label || c.username || c.password);
+  const totp = [];
+  otpRowsEl.querySelectorAll(".otp-row").forEach((row) => {
+    const label = row.querySelector(".lbl").value.trim();
+    const secret = row.querySelector(".sec").value.trim().replace(/\s/g, "");
+    if (label && secret) totp.push({ label, secret });
+  });
+  return { creds, totp };
+}
+function collectUrls() {
+  return [...urlRowsEl.querySelectorAll(".url-row")]
+    .map((r) => ({
+      name: r.querySelector(".uname").value.trim(),
+      category: r.querySelector(".ucat").value.trim(),
+      url: r.querySelector(".uurl").value.trim(),
+      credId: r.querySelector(".ucred").value,
+    }))
+    .filter((u) => u.url);
+}
+async function saveNonSecret() {
+  const iconSymbol = document.getElementById("iconSymbol").value.trim() || "📖";
+  await chrome.storage.sync.set({ urls: collectUrls(), iconSymbol });
+}
+
+// ===== 主密码面板 =====
+let LOCKED = false;
+function mpMsg(t, color) {
+  const m = document.getElementById("mpMsg");
+  if (m) { m.textContent = t; m.style.color = color || "#666"; }
+}
+function renderMaster(state) {
+  const box = document.getElementById("masterBody");
+  if (state === "novault") {
+    box.innerHTML = `
+      <div class="row" style="flex-wrap:wrap;">
+        <input type="password" id="mpNew" placeholder="新主密码(至少4位)" style="width:170px" />
+        <input type="password" id="mpNew2" placeholder="再输一次" style="width:150px" />
+        <button id="mpSet" class="ghost">设置主密码</button>
+      </div>
+      <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;
+    document.getElementById("mpSet").addEventListener("click", onSetMaster);
+  } else if (state === "locked") {
+    box.innerHTML = `
+      <div class="row" style="flex-wrap:wrap;">
+        <input type="password" id="mpUnlock" placeholder="输入主密码解锁" style="width:200px" />
+        <button id="mpUnlockBtn" class="ghost">解锁</button>
+        <button id="mpReset" class="del" style="border-radius:999px;">忘记 · 重设</button>
+      </div>
+      <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;
+    document.getElementById("mpUnlockBtn").addEventListener("click", onUnlock);
+    document.getElementById("mpReset").addEventListener("click", onReset);
+  } else {
+    box.innerHTML = `
+      <div style="font-size:13px;color:#3bb98f;font-weight:700;margin-bottom:8px;">✅ 已解锁（可编辑下方帐密/验证器）</div>
+      <div class="row" style="flex-wrap:wrap;">
+        <input type="password" id="mpChg" placeholder="修改主密码：新密码" style="width:170px" />
+        <input type="password" id="mpChg2" placeholder="再输一次" style="width:150px" />
+        <button id="mpChange" class="ghost">修改主密码</button>
+      </div>
+      <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;
+    document.getElementById("mpChange").addEventListener("click", onChangeMaster);
+  }
+}
+
+async function onSetMaster() {
+  const a = document.getElementById("mpNew").value, b = document.getElementById("mpNew2").value;
+  if (a.length < 4) return mpMsg("主密码至少 4 位", "#d33");
+  if (a !== b) return mpMsg("两次输入不一致", "#d33");
+  const { creds, totp } = collectSecrets();
+  await createVault(a, { creds, totp });
+  await saveNonSecret();
+  mpMsg("✅ 已设置主密码，帐密与验证器已加密", "#2e7d32");
+  await load();
+}
+async function onUnlock() {
+  const pw = document.getElementById("mpUnlock").value;
+  if (!pw) return mpMsg("请输入主密码", "#d33");
+  try { await unlockVault(pw); await load(); }
+  catch (e) { mpMsg("主密码错误", "#d33"); }
+}
+async function onReset() {
+  if (!confirm("确定重设主密码？这会清空已存的帐号密码和验证器，无法找回！")) return;
+  await resetVault();
+  await load();
+}
+async function onChangeMaster() {
+  const a = document.getElementById("mpChg").value, b = document.getElementById("mpChg2").value;
+  if (a.length < 4) return mpMsg("新主密码至少 4 位", "#d33");
+  if (a !== b) return mpMsg("两次输入不一致", "#d33");
+  try { await changeMasterPassword(a); mpMsg("✅ 主密码已修改", "#2e7d32"); }
+  catch (e) { mpMsg("修改失败：" + e.message, "#d33"); }
+}
+
+// ===== 载入 =====
+async function load() {
+  const store = await chrome.storage.sync.get(["urls", "iconSymbol", "vault", "creds", "totp"]);
+  document.getElementById("iconSymbol").value = store.iconSymbol || "📖";
+  buildIconPicks();
+
+  if (store.vault) {
+    const key = await getSessionKey();
+    if (key) {
+      const data = await decryptObj(key, store.vault.iv, store.vault.ct);
+      renderCreds(data.creds);
+      renderOtpList(data.totp);
+      LOCKED = false;
+      renderMaster("unlocked");
+    } else {
+      credRowsEl.innerHTML = '<p class="desc">🔒 已加密，解锁后显示。</p>';
+      otpRowsEl.innerHTML = '<p class="desc">🔒 已加密，解锁后显示。</p>';
+      LOCKED = true;
+      renderMaster("locked");
+    }
+  } else {
+    renderCreds(store.creds);
+    renderOtpList(store.totp);
+    LOCKED = false;
+    renderMaster("novault");
+  }
+
+  renderUrls(store.urls); // 放最后，确保帐密下拉已有选项
 }
 
 // ===== 导入验证器（粘贴图片 / 文件 / 文字）=====
@@ -200,36 +324,27 @@ document.getElementById("importBtn").addEventListener("click", async () => {
 
 // ===== 保存 =====
 document.getElementById("save").addEventListener("click", async () => {
-  const creds = [...credRowsEl.querySelectorAll(".cred-row")]
-    .map((r) => ({
-      id: r.dataset.id,
-      label: r.querySelector(".clabel").value.trim(),
-      username: r.querySelector(".cuser").value,
-      password: r.querySelector(".cpass").value,
-    }))
-    .filter((c) => c.label || c.username || c.password);
-
-  const urls = [...urlRowsEl.querySelectorAll(".url-row")]
-    .map((r) => ({
-      name: r.querySelector(".uname").value.trim(),
-      category: r.querySelector(".ucat").value.trim(),
-      url: r.querySelector(".uurl").value.trim(),
-      credId: r.querySelector(".ucred").value,
-    }))
-    .filter((u) => u.url);
-
-  const totp = [];
-  otpRowsEl.querySelectorAll(".otp-row").forEach((row) => {
-    const label = row.querySelector(".lbl").value.trim();
-    const secret = row.querySelector(".sec").value.trim().replace(/\s/g, "");
-    if (label && secret) totp.push({ label, secret });
-  });
-
-  const iconSymbol = document.getElementById("iconSymbol").value.trim() || "📖";
-
-  await chrome.storage.sync.set({ creds, urls, totp, iconSymbol });
   const saved = document.getElementById("saved");
-  saved.textContent = `✅ 已保存（${creds.length} 组帐密 / ${urls.length} 网址 / ${totp.length} 验证器）`;
+  const vault = await hasVault();
+
+  if (vault && LOCKED) {
+    saved.style.color = "#d33";
+    saved.textContent = "请先在上方「主密码」解锁再保存";
+    setTimeout(() => (saved.textContent = ""), 3000);
+    return;
+  }
+
+  const { creds, totp } = collectSecrets();
+  await saveNonSecret();
+
+  if (vault) {
+    await saveVault({ creds, totp }); // 加密保存
+  } else {
+    await chrome.storage.sync.set({ creds, totp }); // 明文（尚未设主密码）
+  }
+
+  saved.style.color = "#4a9bc4";
+  saved.textContent = `✅ 已保存（${creds.length} 组帐密 / ${collectUrls().length} 网址 / ${totp.length} 验证器）`;
   setTimeout(() => (saved.textContent = ""), 3000);
 });
 
