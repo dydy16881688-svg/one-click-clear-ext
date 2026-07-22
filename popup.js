@@ -282,7 +282,7 @@ document.getElementById("run").addEventListener("click", () => {
     return;
   }
   const logoutGoogle = document.getElementById("logoutGoogle").checked;
-  const afterClear = document.getElementById("afterClear").value;
+  const afterClear = document.getElementById("closeWindows").checked ? "close-one" : "none";
 
   statusEl.style.color = "#666";
   statusEl.textContent = "执行中…";
@@ -297,23 +297,20 @@ document.getElementById("run").addEventListener("click", () => {
   });
 });
 
-// ===== 记住清理选项（你选过的会固定成默认）=====
-const CLEAR_IDS = ["cookies", "history", "cache", "downloads", "wipeProfile", "logoutGoogle"];
+// ===== 记住清理选项（你勾过的会固定成默认）=====
+const CLEAR_IDS = ["cookies", "history", "cache", "downloads", "wipeProfile", "logoutGoogle", "closeWindows"];
 chrome.storage.sync.get("clearOpts", ({ clearOpts }) => {
-  if (!clearOpts) return; // 没存过 → 用 HTML 预设（含 afterClear=关闭所有分页）
+  if (!clearOpts) return; // 没存过 → 用 HTML 预设
   CLEAR_IDS.forEach((id) => {
     if (typeof clearOpts[id] === "boolean") document.getElementById(id).checked = clearOpts[id];
   });
-  if (clearOpts.afterClear) document.getElementById("afterClear").value = clearOpts.afterClear;
 });
 function saveClearOpts() {
   const o = {};
   CLEAR_IDS.forEach((id) => (o[id] = document.getElementById(id).checked));
-  o.afterClear = document.getElementById("afterClear").value;
   chrome.storage.sync.set({ clearOpts: o });
 }
 CLEAR_IDS.forEach((id) => document.getElementById(id).addEventListener("change", saveClearOpts));
-document.getElementById("afterClear").addEventListener("change", saveClearOpts);
 
 // 启动
 init();

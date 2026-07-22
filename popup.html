@@ -156,13 +156,7 @@
       <input type="checkbox" id="wipeProfile" checked />
       彻底清空设定档（连密码/表单/本地存储也清）
     </label>
-    <div class="opt">清理后：
-      <select id="afterClear" style="font-size:13px; padding:5px 8px; border:1.5px solid #ece3c8; border-radius:8px; background:#fffdf6;">
-        <option value="close-one">关闭所有分页与视窗（只留一个空白页）</option>
-        <option value="reload">重载所有分页（一起登出）</option>
-        <option value="none">不处理分页（仍会清资料，只是不动分页）</option>
-      </select>
-    </div>
+    <label class="opt"><input type="checkbox" id="closeWindows" checked /> 关闭所有分页与视窗（只留一个空白页）</label>
     <button class="primary" id="run" style="margin-top:12px">一键执行</button>
     <div id="status"></div>
   </div>
