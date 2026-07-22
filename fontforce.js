@@ -3,9 +3,13 @@
 
 const STYLE_ID = "__force_font_style__";
 
+// emoji / 符號備援：放在正文字體之後、generic 之前。
+// 一般中英文照樣用前面的正文字體；只有正文字體缺字的 emoji/符號碼位才 fallback 到這裡，避免變成空格。
+const EMOJI_FALLBACK = `"Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", "Noto Emoji"`;
+
 const FONT_STACKS = {
-  jhenghei: `"Microsoft JhengHei", "微軟正黑體", "Microsoft JhengHei UI", "PingFang TC", sans-serif`,
-  comic: `"Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive`,
+  jhenghei: `"Microsoft JhengHei", "微軟正黑體", "Microsoft JhengHei UI", "PingFang TC", ${EMOJI_FALLBACK}, sans-serif`,
+  comic: `"Comic Sans MS", "Comic Sans", "Chalkboard SE", ${EMOJI_FALLBACK}, cursive`,
 };
 
 function buildCSS(fontKey) {
