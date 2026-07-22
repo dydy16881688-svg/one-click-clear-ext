@@ -65,6 +65,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (chrome.runtime.lastError) {
           sendResponse({ ok: false, error: chrome.runtime.lastError.message });
         } else {
+          if (msg.reloadAll) reloadAllTabs(); // 重载所有视窗的分页 → 全部显示登出
           sendResponse({ ok: true });
         }
       });
@@ -91,6 +92,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 const GROUP_COLORS = ["blue", "cyan", "green", "yellow", "orange", "pink", "purple", "red", "grey"];
+
+// 重载当前设定档「所有视窗」的 http(s) 分页，让各窗立即反映登出状态
+function reloadAllTabs() {
+  chrome.tabs.query({}, (tabs) => {
+    for (const t of tabs) {
+      if (t.url && /^https?:/i.test(t.url)) {
+        try { chrome.tabs.reload(t.id); } catch (e) {}
+      }
+    }
+  });
+}
 
 async function openUrls(items) {
   // items: [{ url, category, username, password }]

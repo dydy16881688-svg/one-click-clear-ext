@@ -282,10 +282,11 @@ document.getElementById("run").addEventListener("click", () => {
     return;
   }
   const logoutGoogle = document.getElementById("logoutGoogle").checked;
+  const reloadAll = document.getElementById("reloadAll").checked;
 
   statusEl.style.color = "#666";
   statusEl.textContent = "执行中…";
-  chrome.runtime.sendMessage({ type: "CLEAR", dataToRemove, logoutGoogle }, (resp) => {
+  chrome.runtime.sendMessage({ type: "CLEAR", dataToRemove, logoutGoogle, reloadAll }, (resp) => {
     if (chrome.runtime.lastError) {
       statusEl.style.color = "#d33";
       statusEl.textContent = "出错：" + chrome.runtime.lastError.message;
