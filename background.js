@@ -90,18 +90,47 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
+const GROUP_COLORS = ["blue", "cyan", "green", "yellow", "orange", "pink", "purple", "red", "grey"];
+
 async function openUrls(items) {
-  // items: [{ url, username, password }]
+  // items: [{ url, category, username, password }]
+  // 依分类分组，每类的分页建立一个 Chrome 分页群组
+  const byCat = {};
+  const order = [];
   for (const it of items) {
     if (!it.url) continue;
-    try {
-      const tab = await chrome.tabs.create({ url: it.url });
-      if (it.username || it.password) {
-        pendingFills[tab.id] = { username: it.username || "", password: it.password || "" };
+    const cat = it.category || "未分类";
+    if (!byCat[cat]) { byCat[cat] = []; order.push(cat); }
+    byCat[cat].push(it);
+  }
+
+  let ci = 0;
+  for (const cat of order) {
+    const tabIds = [];
+    for (const it of byCat[cat]) {
+      try {
+        const tab = await chrome.tabs.create({ url: it.url });
+        if (it.username || it.password) {
+          pendingFills[tab.id] = { username: it.username || "", password: it.password || "" };
+        }
+        tabIds.push(tab.id);
+      } catch (e) {
+        // 单个网址失败不影响其他
       }
-    } catch (e) {
-      // 单个网址失败不影响其他
     }
+    // 建立分页群组并命名/上色
+    if (tabIds.length) {
+      try {
+        const groupId = await chrome.tabs.group({ tabIds });
+        await chrome.tabGroups.update(groupId, {
+          title: cat,
+          color: GROUP_COLORS[ci % GROUP_COLORS.length],
+        });
+      } catch (e) {
+        // 不支持分页群组时忽略，分页照样开
+      }
+    }
+    ci++;
   }
 }
 

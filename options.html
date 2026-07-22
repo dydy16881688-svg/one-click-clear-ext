@@ -105,6 +105,9 @@
       border: none; background: none; cursor: pointer; font-size: 15px;
       padding: 0; line-height: 1; border-radius: 0;
     }
+    .drag { cursor: grab; color: #cbbf9d; font-size: 16px; user-select: none; width: 16px; text-align: center; flex-shrink: 0; }
+    .drag:active { cursor: grabbing; }
+    .ucred-locked { width: 130px; font-size: 12px; color: #a08356; }
   </style>
 </head>
 <body>
@@ -137,7 +140,7 @@
       选择要自动填入的账号密码；如果选「不填账号密码」，仅打开网页，不自动填入。
     </p>
     <div class="row head">
-      <span style="width:120px">名称</span><span style="width:95px">分类</span><span style="flex:1">网址（含 https://）</span><span style="width:130px">用哪组帐密</span><span style="width:48px"></span>
+      <span style="width:16px"></span><span style="width:120px">名称</span><span style="width:95px">分类</span><span style="flex:1">网址（含 https://）</span><span style="width:130px">用哪组帐密</span><span style="width:48px"></span>
     </div>
     <div id="urlRows"></div>
     <button id="addUrl" class="ghost">+ 加一个网址</button>

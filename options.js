@@ -33,6 +33,35 @@ document.addEventListener("click", (e) => {
   btn.textContent = show ? "🙈" : "👁";
 });
 
+// 拖曳排序（网址 / 验证器）
+function makeSortable(container, rowSelector) {
+  let dragEl = null;
+  container.addEventListener("dragstart", (e) => {
+    const handle = e.target.closest(".drag");
+    if (!handle) return;
+    dragEl = handle.closest(rowSelector);
+    if (!dragEl) return;
+    e.dataTransfer.effectAllowed = "move";
+    try { e.dataTransfer.setDragImage(dragEl, 12, 12); } catch (x) {}
+    setTimeout(() => (dragEl.style.opacity = "0.4"), 0);
+  });
+  container.addEventListener("dragend", () => {
+    if (dragEl) dragEl.style.opacity = "";
+    dragEl = null;
+  });
+  container.addEventListener("dragover", (e) => {
+    if (!dragEl) return;
+    e.preventDefault();
+    const row = e.target.closest(rowSelector);
+    if (!row || row === dragEl || row.parentNode !== container) return;
+    const rect = row.getBoundingClientRect();
+    const after = e.clientY - rect.top > rect.height / 2;
+    container.insertBefore(dragEl, after ? row.nextSibling : row);
+  });
+}
+makeSortable(urlRowsEl, ".url-row");
+makeSortable(otpRowsEl, ".otp-row");
+
 // ===== 帐密组 =====
 function addCredRow(id = uuid(), label = "", username = "", password = "") {
   const row = document.createElement("div");
@@ -81,19 +110,24 @@ document.getElementById("addCred").addEventListener("click", () => addCredRow())
 function addUrlRow(name = "", category = "", url = "", credId = "") {
   const row = document.createElement("div");
   row.className = "row url-row";
+  const credCell = LOCKED
+    ? `<span class="ucred-locked">🔒 已加密，解锁后显示</span>`
+    : `<select class="ucred"></select>`;
   row.innerHTML = `
+    <span class="drag" draggable="true" title="拖曳排序">⠿</span>
     <input class="uname" placeholder="名称，如 派单后台" value="${escapeAttr(name)}" />
     <input class="ucat" placeholder="分类" value="${escapeAttr(category)}" />
     <input class="uurl" placeholder="https://..." value="${escapeAttr(url)}" />
-    <select class="ucred"></select>
+    ${credCell}
     <button class="del" title="删除">🗑️</button>
   `;
   row.querySelector(".del").addEventListener("click", () => row.remove());
   urlRowsEl.appendChild(row);
-  refreshCredSelects(); // 建立下拉选项
-  // 设定选中值（refreshCredSelects 会保留 cur，但初始需手动设）
-  const sel = row.querySelector(".ucred");
-  if ([...sel.options].some((o) => o.value === credId)) sel.value = credId;
+  if (!LOCKED) {
+    refreshCredSelects(); // 建立下拉选项
+    const sel = row.querySelector(".ucred");
+    if (sel && [...sel.options].some((o) => o.value === credId)) sel.value = credId;
+  }
 }
 
 document.getElementById("addUrl").addEventListener("click", () => addUrlRow("", "", "", defaultCredId()));
@@ -108,7 +142,8 @@ function addOtpRow(label = "", secret = "") {
   const row = document.createElement("div");
   row.className = "row otp-row";
   row.innerHTML = `
-    <input class="lbl" style="width:180px" placeholder="名字，如 Google" value="${escapeAttr(label)}" />
+    <span class="drag" draggable="true" title="拖曳排序">⠿</span>
+    <input class="lbl" style="width:170px" placeholder="名字，如 Google" value="${escapeAttr(label)}" />
     <input class="sec" style="flex:1" placeholder="密钥 base32" value="${escapeAttr(secret)}" />
     <button class="del" title="删除">🗑️</button>
   `;

@@ -96,13 +96,18 @@ document.getElementById("lockNow").addEventListener("click", async () => {
   showLock();
 });
 
-// ===== 强制字型开关 =====
+// ===== 强制字型开关 + 字体选择 =====
 const forceFontEl = document.getElementById("forceFont");
-chrome.storage.sync.get("forceFont", ({ forceFont }) => {
+const fontFamilyEl = document.getElementById("fontFamily");
+chrome.storage.sync.get(["forceFont", "fontFamily"], ({ forceFont, fontFamily }) => {
   forceFontEl.checked = forceFont !== false; // 默认开
+  fontFamilyEl.value = fontFamily || "jhenghei";
 });
 forceFontEl.addEventListener("change", () => {
   chrome.storage.sync.set({ forceFont: forceFontEl.checked });
+});
+fontFamilyEl.addEventListener("change", () => {
+  chrome.storage.sync.set({ fontFamily: fontFamilyEl.value });
 });
 
 // ===== 启动：打开网址 + 自动填帐密 =====
@@ -141,7 +146,7 @@ async function loadLaunch() {
       <div class="cat-row">
         <span><span class="cat-name">${escapeHtml(name)}</span>
         <span class="cat-count">(${cats[name].length})</span></span>
-        <button class="sec" data-cat="${i}">打开本类</button>
+        <button class="sec" data-cat="${i}">打开此分类</button>
       </div>`
           )
           .join("")
