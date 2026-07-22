@@ -160,6 +160,18 @@
     <button class="primary" id="run" style="margin-top:12px">一键执行</button>
     <div id="status"></div>
   </div>
+  <!-- 版本 / 更新 -->
+  <div id="verBar" style="border-top:1px solid #f0ead3; padding:9px 14px; display:flex; align-items:center; justify-content:space-between; font-size:11.5px; color:#b6ac8e; background:#fffdf4;">
+    <span>版本 <span id="curVer">–</span></span>
+    <span id="verStatus">检查更新中…</span>
+  </div>
+  <div id="updateGuide" style="display:none; padding:12px 14px; background:#fdf6df; border-top:1px solid #f2e3ad; font-size:12px; color:#8a6d17; line-height:1.7;">
+    <div style="font-weight:700; margin-bottom:6px;">🔔 有新版可以更新</div>
+    <div>1️⃣ 到插件资料夹，<b>双击「更新.bat」</b>（会自动抓最新档）</div>
+    <div>2️⃣ 跑完看到绿色「已更新」后，回来点下面 👇</div>
+    <button class="sec" id="reloadExt" style="margin-top:8px; width:100%;">🔄 我更新好了，重新载入插件</button>
+    <div style="font-size:10.5px; color:#b6ac8e; margin-top:6px;">（重新载入 = 帮你按了 chrome://extensions 的刷新，不用自己去点）</div>
+  </div>
   </div><!-- /appWrap -->
 
   <script src="totp.js"></script>

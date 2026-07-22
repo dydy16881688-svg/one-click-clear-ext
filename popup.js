@@ -312,5 +312,59 @@ function saveClearOpts() {
 }
 CLEAR_IDS.forEach((id) => document.getElementById(id).addEventListener("change", saveClearOpts));
 
+// ===== 版本检查 + 更新引导（丙：提示 + 引导双击 更新.bat，再一键重载）=====
+const REPO_MANIFEST = "https://raw.githubusercontent.com/dydy16881688-svg/one-click-clear-ext/main/manifest.json";
+
+// 数字化比较版本，latest 大于 cur 才算有新版
+function cmpVer(a, b) {
+  const pa = String(a).split("."), pb = String(b).split(".");
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = parseInt(pa[i] || "0", 10), y = parseInt(pb[i] || "0", 10);
+    if (x !== y) return x - y;
+  }
+  return 0;
+}
+
+async function checkUpdate() {
+  const cur = chrome.runtime.getManifest().version;
+  document.getElementById("curVer").textContent = "v" + cur;
+  const statusEl = document.getElementById("verStatus");
+  const guideEl = document.getElementById("updateGuide");
+  statusEl.onclick = null;
+  statusEl.textContent = "检查更新中…";
+  statusEl.style.color = "#b6ac8e";
+  statusEl.style.cursor = "default";
+  statusEl.style.fontWeight = "400";
+  try {
+    const resp = await fetch(REPO_MANIFEST, { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const latest = (await resp.json()).version;
+    if (cmpVer(latest, cur) > 0) {
+      statusEl.textContent = `🔔 有新版 v${latest} ›`;
+      statusEl.style.color = "#e0688f";
+      statusEl.style.fontWeight = "700";
+      statusEl.style.cursor = "pointer";
+      statusEl.onclick = () => {
+        guideEl.style.display = guideEl.style.display === "none" ? "block" : "none";
+      };
+      guideEl.style.display = "block"; // 有新版直接展开引导
+    } else {
+      statusEl.textContent = "✅ 已是最新";
+      statusEl.style.color = "#4a9bc4";
+      guideEl.style.display = "none";
+    }
+  } catch (e) {
+    statusEl.textContent = "检查失败，点我重试";
+    statusEl.style.cursor = "pointer";
+    statusEl.title = e.message || "";
+    statusEl.onclick = checkUpdate;
+  }
+}
+
+// 重新载入 = 从磁盘重读文件（等于 chrome://extensions 的刷新）
+document.getElementById("reloadExt").addEventListener("click", () => chrome.runtime.reload());
+
+checkUpdate();
+
 // 启动
 init();
