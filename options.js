@@ -236,6 +236,10 @@ function mpMsg(t, color) {
   const m = document.getElementById("mpMsg");
   if (m) { m.textContent = t; m.style.color = color || "#666"; }
 }
+function onEnter(id, fn) {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("keydown", (e) => { if (e.key === "Enter") fn(); });
+}
 function renderMaster(state) {
   const box = document.getElementById("masterBody");
   if (state === "novault") {
@@ -247,6 +251,8 @@ function renderMaster(state) {
       </div>
       <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;
     document.getElementById("mpSet").addEventListener("click", onSetMaster);
+    onEnter("mpNew", onSetMaster);
+    onEnter("mpNew2", onSetMaster);
   } else if (state === "locked") {
     box.innerHTML = `
       <div class="row" style="flex-wrap:wrap;">
@@ -257,6 +263,7 @@ function renderMaster(state) {
       <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;
     document.getElementById("mpUnlockBtn").addEventListener("click", onUnlock);
     document.getElementById("mpReset").addEventListener("click", onReset);
+    onEnter("mpUnlock", onUnlock);
   } else {
     box.innerHTML = `
       <div style="font-size:13px;color:#3bb98f;font-weight:700;margin-bottom:8px;">✅ 已解锁（可编辑下方帐密/验证器）</div>
@@ -267,6 +274,8 @@ function renderMaster(state) {
       </div>
       <div id="mpMsg" style="font-size:12px;margin-top:8px;"></div>`;
     document.getElementById("mpChange").addEventListener("click", onChangeMaster);
+    onEnter("mpChg", onChangeMaster);
+    onEnter("mpChg2", onChangeMaster);
   }
 }
 
