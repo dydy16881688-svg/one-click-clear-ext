@@ -59,6 +59,7 @@ function makeSortable(container, rowSelector) {
     container.insertBefore(dragEl, after ? row.nextSibling : row);
   });
 }
+makeSortable(credRowsEl, ".cred-row");
 makeSortable(urlRowsEl, ".url-row");
 makeSortable(otpRowsEl, ".otp-row");
 
@@ -68,6 +69,7 @@ function addCredRow(id = uuid(), label = "", username = "", password = "") {
   row.className = "row cred-row";
   row.dataset.id = id;
   row.innerHTML = `
+    <span class="drag" draggable="true" title="拖曳排序">⠿</span>
     <input class="clabel" placeholder="如 默认帐密" value="${escapeAttr(label)}" />
     <input class="cuser" placeholder="帐号" value="${escapeAttr(username)}" />
     <span class="pw-wrap" style="flex:1;">
