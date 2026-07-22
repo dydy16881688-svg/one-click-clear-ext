@@ -282,11 +282,11 @@ document.getElementById("run").addEventListener("click", () => {
     return;
   }
   const logoutGoogle = document.getElementById("logoutGoogle").checked;
-  const reloadAll = document.getElementById("reloadAll").checked;
+  const afterClear = document.getElementById("afterClear").value;
 
   statusEl.style.color = "#666";
   statusEl.textContent = "执行中…";
-  chrome.runtime.sendMessage({ type: "CLEAR", dataToRemove, logoutGoogle, reloadAll }, (resp) => {
+  chrome.runtime.sendMessage({ type: "CLEAR", dataToRemove, logoutGoogle, afterClear }, (resp) => {
     if (chrome.runtime.lastError) {
       statusEl.style.color = "#d33";
       statusEl.textContent = "出错：" + chrome.runtime.lastError.message;
@@ -296,6 +296,24 @@ document.getElementById("run").addEventListener("click", () => {
     statusEl.textContent = resp && resp.ok ? "✅ 完成" : "❌ 失败";
   });
 });
+
+// ===== 记住清理选项（你选过的会固定成默认）=====
+const CLEAR_IDS = ["cookies", "history", "cache", "downloads", "wipeProfile", "logoutGoogle"];
+chrome.storage.sync.get("clearOpts", ({ clearOpts }) => {
+  if (!clearOpts) return; // 没存过 → 用 HTML 预设（含 afterClear=关闭所有分页）
+  CLEAR_IDS.forEach((id) => {
+    if (typeof clearOpts[id] === "boolean") document.getElementById(id).checked = clearOpts[id];
+  });
+  if (clearOpts.afterClear) document.getElementById("afterClear").value = clearOpts.afterClear;
+});
+function saveClearOpts() {
+  const o = {};
+  CLEAR_IDS.forEach((id) => (o[id] = document.getElementById(id).checked));
+  o.afterClear = document.getElementById("afterClear").value;
+  chrome.storage.sync.set({ clearOpts: o });
+}
+CLEAR_IDS.forEach((id) => document.getElementById(id).addEventListener("change", saveClearOpts));
+document.getElementById("afterClear").addEventListener("change", saveClearOpts);
 
 // 启动
 init();

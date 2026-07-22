@@ -65,7 +65,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (chrome.runtime.lastError) {
           sendResponse({ ok: false, error: chrome.runtime.lastError.message });
         } else {
-          if (msg.reloadAll) reloadAllTabs(); // 重载所有视窗的分页 → 全部显示登出
+          if (msg.afterClear === "close") closeAllTabs();
+          else if (msg.afterClear === "reload") reloadAllTabs();
           sendResponse({ ok: true });
         }
       });
@@ -101,6 +102,17 @@ function reloadAllTabs() {
         try { chrome.tabs.reload(t.id); } catch (e) {}
       }
     }
+  });
+}
+
+// 关闭所有视窗的 http(s) 分页（先开一个新分页，避免浏览器整个关掉）
+function closeAllTabs() {
+  chrome.tabs.query({}, (tabs) => {
+    const ids = tabs.filter((t) => t.url && /^https?:/i.test(t.url)).map((t) => t.id);
+    if (!ids.length) return;
+    chrome.tabs.create({ url: "chrome://newtab" }, () => {
+      try { chrome.tabs.remove(ids); } catch (e) {}
+    });
   });
 }
 
