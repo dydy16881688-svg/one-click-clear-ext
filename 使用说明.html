@@ -62,6 +62,10 @@
   /* ---- 界面示意图 ---- */
   .mock { margin: 14px 0; }
   .mockcap { font-size: 11.5px; color: #b6ac8e; text-align: center; margin-top: 6px; }
+  .cmdbox { background:#1e1e1e; color:#ddd; border-radius:8px; padding:12px 14px; font-family:monospace; font-size:12.5px; line-height:1.8; }
+  .filebox { border:1px solid #e0e0e0; border-radius:10px; background:#fafafa; padding:14px; display:flex; align-items:center; gap:10px; }
+  .tag-y { background:#fff3c4; border-radius:6px; padding:3px 10px; font-size:12px; color:#8a6d17; }
+  .refresh { border:1px solid #1a73e8; color:#1a73e8; border-radius:50%; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; }
   .browserbar {
     display: flex; align-items: center; gap: 8px; background: #f1f3f4;
     border: 1px solid #e0e0e0; border-radius: 10px 10px 0 0; padding: 8px 12px;
@@ -261,7 +265,43 @@
   <!-- 8 -->
   <div class="step" id="s8">
     <h2><span class="num">8</span> 关于版本更新</h2>
-    <p>作者更新后，双击资料夹里的 <b>更新.bat</b> → 自动下载最新版覆盖 → 再到 <span class="key">chrome://extensions</span> 点该插件的<b>刷新 ↻</b> 即可。</p>
+    <p>作者更新后，你<b>不用重新下载压缩档</b>，只要两步。<b>「更新.bat」每次都会自动从 GitHub 抓最新版</b>，你不用挑版本。</p>
+
+    <div class="mock">
+      <div class="filebox">
+        <span style="font-size:26px;">⚙️</span>
+        <div><b>更新.bat</b><div style="font-size:12px;color:#999;">在插件资料夹里</div></div>
+        <span style="flex:1"></span>
+        <span class="tag-y">👆 双击它</span>
+      </div>
+      <div class="mockcap">▲ 第 1 步：双击资料夹里的「更新.bat」</div>
+    </div>
+
+    <div class="mock">
+      <div class="cmdbox">
+        <div>正在下载最新版...</div>
+        <div style="color:#7CFC7C;">[完成] 档案已更新到 v4.12</div>
+        <div style="color:#ffd964;">最后一步：到 chrome://extensions 点「刷新」按钮</div>
+      </div>
+      <div class="mockcap">▲ 看到绿色「[完成] 已更新到 vX」= 下载成功；照黄字提醒做下一步</div>
+    </div>
+
+    <div class="mock">
+      <div class="browserbar">
+        <div class="dot" style="background:#f96"></div><div class="dot" style="background:#fc5"></div><div class="dot" style="background:#6c6"></div>
+        <div class="addr">chrome://extensions</div>
+      </div>
+      <div class="panelbox">
+        <div class="flex">
+          <span>🧩 一键打开/验证器/清理小工具　<span style="color:#999;font-size:12px;">v4.12</span></span>
+          <span style="flex:1"></span>
+          <span class="refresh">↻</span>
+        </div>
+      </div>
+      <div class="mockcap">▲ 第 2 步：到 chrome://extensions，点这个插件的「刷新 ↻」→ 版本就变最新</div>
+    </div>
+
+    <div class="warn">⚠️ 更新后<b>一定要点「刷新↻」</b>，否则画面版本不会变。若点了还是旧版号 → 代表「更新.bat」更新的资料夹和 Chrome 载入的不是同一个。</div>
     <div class="tip">第一次双击 <span class="key">更新.bat</span> 若跳 Windows 蓝框，点「更多信息 → 仍要运行」。它不会动你存的账密/验证器。</div>
   </div>
 
