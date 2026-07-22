@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>一键打开 / 验证器 / 清理小工具 —— 介绍</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 44px 16px 80px; color: #5b5647; line-height: 1.75;
+    font-family: -apple-system, "Microsoft YaHei", sans-serif;
+    background:
+      radial-gradient(1100px 480px at 100% -10%, #fdf3c9 0, transparent 55%),
+      radial-gradient(1000px 480px at -10% 0%, #dceffb 0, transparent 55%),
+      #fffdf4;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 26px; }
+  header .ico {
+    width: 78px; height: 78px; border-radius: 20px; background: #7fb9df;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 22px rgba(127,185,223,.4); margin-bottom: 12px;
+  }
+  header .ico svg { width: 46px; height: 46px; }
+  h1 { font-size: 26px; color: #5f7d95; margin: 6px 0 4px; }
+  .tagline { color: #9a927e; font-size: 15px; margin: 0; }
+
+  .intro {
+    background: #fffef8; border: 1px solid #f0ead3; border-radius: 18px;
+    padding: 18px 22px; margin: 22px 0; font-size: 15px; text-align: center;
+    box-shadow: 0 5px 18px rgba(180,170,120,.12);
+  }
+  .intro b { color: #d98299; }
+
+  h2.sec { font-size: 18px; color: #6f8598; margin: 30px 0 12px; text-align: center; }
+
+  /* 功能卡 */
+  .cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+  .card {
+    background: #fff; border: 1px solid #f0ead3; border-radius: 18px;
+    padding: 18px; box-shadow: 0 5px 18px rgba(180,170,120,.12); position: relative; overflow: hidden;
+  }
+  .card::before { content:""; position:absolute; left:0; top:0; right:0; height:5px; }
+  .card.launch::before { background: linear-gradient(90deg,#a9d4ee,#7fb9df); }
+  .card.otp::before    { background: linear-gradient(90deg,#ffe08a,#f7cf5e); }
+  .card.clean::before  { background: linear-gradient(90deg,#c3b5ff,#a78bfa); }
+  .card .emoji { font-size: 30px; }
+  .card h3 { font-size: 16px; margin: 8px 0 8px; color: #5b5647; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 13px; color: #6a6350; }
+  .card li { margin: 5px 0; }
+
+  /* 双栏小卡 */
+  .duo { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+  @media (min-width: 640px) { .duo { grid-template-columns: 1fr 1fr; } }
+  .mini {
+    background: #fffef8; border: 1px solid #f0ead3; border-radius: 16px; padding: 16px 18px;
+    box-shadow: 0 4px 14px rgba(180,170,120,.1);
+  }
+  .mini h3 { font-size: 15px; margin: 0 0 8px; color: #6f8598; }
+  .mini ul { margin: 0; padding-left: 18px; font-size: 13px; }
+  .mini li { margin: 4px 0; }
+  .mini b { color: #c96a86; }
+
+  .foot {
+    text-align: center; margin-top: 30px; font-size: 14px; color: #7e8a95;
+    background: #eef7fd; border: 1px solid #d5e9f5; border-radius: 14px; padding: 14px 18px;
+  }
+  .foot b { color: #4a7a96; }
+  footer { text-align: center; color: #b6ac8e; font-size: 12px; margin-top: 22px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="ico">
+      <svg viewBox="0 0 100 100"><g fill="#fff">
+        <polygon points="48,35 20,41 20,69 48,63" /><polygon points="52,35 80,41 80,69 52,63" />
+      </g></svg>
+    </div>
+    <h1>一键打开 / 验证器 / 清理小工具</h1>
+    <p class="tagline">客服每天最花时间的三件事，一个图标搞定</p>
+  </header>
+
+  <div class="intro">
+    一个 Chrome 扩充功能，把 <b>登入后台</b>、<b>找验证码</b>、<b>下班清资料</b> 整合到一个图标里，点几下就完成。
+  </div>
+
+  <h2 class="sec">✨ 三大功能</h2>
+  <div class="cards">
+    <div class="card launch">
+      <div class="emoji">🚀</div>
+      <h3>一键启动</h3>
+      <ul>
+        <li>一次打开所有常用后台</li>
+        <li><b>自动填入账号密码</b>（你只要按登录）</li>
+        <li>网址可分类，打开自动<b>建立分页群组</b></li>
+      </ul>
+    </div>
+    <div class="card otp">
+      <div class="emoji">🔐</div>
+      <h3>内建验证器</h3>
+      <ul>
+        <li>从手机 Google Authenticator <b>批量汇入</b></li>
+        <li>动态码即时显示（剩 5 秒变红）</li>
+        <li><b>点一下卡片就复制</b>，不用翻手机</li>
+      </ul>
+    </div>
+    <div class="card clean">
+      <div class="emoji">🧹</div>
+      <h3>一键清理 / 登出</h3>
+      <ul>
+        <li>登出所有网站（含 Google）</li>
+        <li>彻底清除浏览痕迹</li>
+        <li>可清完关掉所有视窗，只留空白页</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="sec">🔒 安全 & 跨机同步</h2>
+  <div class="duo">
+    <div class="mini">
+      <h3>🔒 主密码加密</h3>
+      <ul>
+        <li>账密与验证器用主密码<b>加密存储</b>（AES-GCM）</li>
+        <li>打开插件、进设置都要先输主密码</li>
+        <li><b>零知识</b>：主密码只在你脑中，忘记只能重设</li>
+      </ul>
+    </div>
+    <div class="mini">
+      <h3>☁️ 换电脑不用重设</h3>
+      <ul>
+        <li>设定绑<b>你自己的 Google 帐号</b>（Chrome 同步）</li>
+        <li>任何电脑登入你的帐号 + 开同步 → 设定自动回来</li>
+        <li>还原型电脑也适用</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot">
+    📖 <b>安装与使用步骤</b> 请看资料夹内的「<b>使用说明.html</b>」（图文一步步教）。<br>
+    更新只要双击「<b>更新.bat</b>」+ 到 chrome://extensions 点刷新 ↻。
+  </div>
+
+  <footer>一键打开 / 验证器 / 清理小工具</footer>
+</div>
+</body>
+</html>
