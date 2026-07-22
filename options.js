@@ -305,21 +305,21 @@ async function load() {
   document.getElementById("iconSymbol").value = store.iconSymbol || "📖";
   buildIconPicks();
 
+  // 有主密码但本页未解锁 → 隐藏整页设置，只留主密码解锁（每次打开都要输）
+  const key = store.vault && pageUnlocked ? await getSessionKey() : null;
+  if (store.vault && !key) {
+    LOCKED = true;
+    renderMaster("locked");
+    setLocked(true);
+    return;
+  }
+
   if (store.vault) {
-    // 只认「本次设置页已解锁」，不吃弹窗缓存 → 每次打开设置页都要输主密码
-    const key = pageUnlocked ? await getSessionKey() : null;
-    if (key) {
-      const data = await decryptObj(key, store.vault.iv, store.vault.ct);
-      renderCreds(data.creds);
-      renderOtpList(data.totp);
-      LOCKED = false;
-      renderMaster("unlocked");
-    } else {
-      credRowsEl.innerHTML = '<p class="desc">🔒 已加密，解锁后显示。</p>';
-      otpRowsEl.innerHTML = '<p class="desc">🔒 已加密，解锁后显示。</p>';
-      LOCKED = true;
-      renderMaster("locked");
-    }
+    const data = await decryptObj(key, store.vault.iv, store.vault.ct);
+    renderCreds(data.creds);
+    renderOtpList(data.totp);
+    LOCKED = false;
+    renderMaster("unlocked");
   } else {
     renderCreds(store.creds);
     renderOtpList(store.totp);
@@ -328,6 +328,14 @@ async function load() {
   }
 
   renderUrls(store.urls); // 放最后，确保帐密下拉已有选项
+  setLocked(false);
+}
+
+// 上锁时隐藏整页设置区，只留主密码面板
+function setLocked(locked) {
+  document.querySelectorAll(".cfg-section").forEach((s) => (s.style.display = locked ? "none" : ""));
+  const note = document.getElementById("lockedNote");
+  if (note) note.style.display = locked ? "block" : "none";
 }
 
 // ===== 导入验证器（粘贴图片 / 文件 / 文字）=====

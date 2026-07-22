@@ -119,7 +119,9 @@
     <div id="masterBody"></div>
   </section>
 
-  <section class="panel">
+  <div id="lockedNote" style="display:none; text-align:center; color:#a08356; padding:22px; font-size:14px;">🔒 解锁后显示全部设置</div>
+
+  <section class="panel cfg-section">
     <h2>🔑 ① 账号密码设定</h2>
     <p class="desc">
       第1步：先设置一组「默认账号密码」，大部分网站都会自动用这组。<br />
@@ -133,7 +135,7 @@
     <button id="addCred" class="ghost">+ 加一组账号密码</button>
   </section>
 
-  <section class="panel">
+  <section class="panel cfg-section">
     <h2>🌐 ② 一键打开的网址（可分类 + 选帐密）</h2>
     <p class="desc">
       分类相同的会归成一组，插件里能「按分类打开」。<br />
@@ -146,7 +148,7 @@
     <button id="addUrl" class="ghost">+ 加一个网址</button>
   </section>
 
-  <section class="panel">
+  <section class="panel cfg-section">
     <h2>📲 ③ 从手机批量导入验证器</h2>
     <div class="card">
       <div class="steps">
@@ -166,14 +168,14 @@
     </div>
   </section>
 
-  <section class="panel">
+  <section class="panel cfg-section">
     <h2>🔐 ④ 验证器账户（可手动编辑）</h2>
     <p class="desc">导入的账户会出现在这里。</p>
     <div id="otpRows"></div>
     <button id="addOtp" class="ghost">+ 加一行</button>
   </section>
 
-  <section class="panel">
+  <section class="panel cfg-section">
     <h2>🎨 ⑤ 工具栏图标符号</h2>
     <p class="desc">插件在浏览器右上角显示的小图标符号，可自定义（填一个 emoji 或一个字）。底色固定宝宝蓝。</p>
     <div class="row" style="align-items:center; flex-wrap:wrap;">
@@ -182,7 +184,7 @@
     </div>
   </section>
 
-  <div class="save-bar">
+  <div class="save-bar cfg-section">
     <button class="save" id="save">💾 保存全部</button>
     <span id="saved"></span>
   </div>
