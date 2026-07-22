@@ -17,9 +17,19 @@ try {
   Expand-Archive -Path $zip -DestinationPath (Join-Path $tmp "ex") -Force
   $inner = Get-ChildItem (Join-Path $tmp "ex") -Directory | Select-Object -First 1
   Copy-Item -Path (Join-Path $inner.FullName "*") -Destination $dir -Recurse -Force
+
+  $ver = "?"
+  $mfTxt = Get-Content (Join-Path $dir "manifest.json") -Raw
+  if ($mfTxt -match '"version"\s*:\s*"([^"]+)"') { $ver = $matches[1] }
+
   Write-Host ""
-  Write-Host "[完成] 已更新到最新版!" -ForegroundColor Green
-  Write-Host "请到 chrome://extensions 点这个插件的「刷新」按钮，更新才会生效。" -ForegroundColor Yellow
+  Write-Host "[完成] 档案已更新到 v$ver" -ForegroundColor Green
+  Write-Host "更新位置: $dir" -ForegroundColor Gray
+  Write-Host ""
+  Write-Host "==============================================" -ForegroundColor Yellow
+  Write-Host " 最后一步(必做): 到 chrome://extensions" -ForegroundColor Yellow
+  Write-Host " 点这个插件的「刷新」按钮，版本才会变成 v$ver" -ForegroundColor Yellow
+  Write-Host "==============================================" -ForegroundColor Yellow
 } catch {
   Write-Host ""
   Write-Host ("[失败] " + $_.Exception.Message) -ForegroundColor Red
