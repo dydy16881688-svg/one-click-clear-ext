@@ -276,7 +276,22 @@
   <!-- 8 -->
   <div class="step" id="s8">
     <h2><span class="num">8</span> 关于版本更新</h2>
-    <p>作者更新后，你<b>不用重新下载压缩档</b>，只要两步。<b>「更新.bat」每次都会自动从 GitHub 抓最新版</b>，你不用挑版本。</p>
+    <p>作者更新后，你<b>不用重新下载压缩档</b>。插件会<b>自动帮你检查新版</b>：打开插件看<b>最下面</b>，没新版显示「✅ 已是最新」，有新版会亮出「🔔 有新版」并展开步骤。<b>「更新.bat」每次都会自动从 GitHub 抓最新版</b>，你不用挑版本。</p>
+
+    <div class="mock">
+      <div class="popup" style="width:280px; margin:0 auto;">
+        <div style="border-top:1px solid #f0ead3; padding:9px 12px; display:flex; justify-content:space-between; font-size:11.5px; font-weight:700;">
+          <span style="color:#b6ac8e; font-weight:400;">版本 v4.23.0</span><span style="color:#e0688f;">🔔 有新版 v4.24 ›</span>
+        </div>
+        <div style="background:#fdf6df; border-top:1px solid #f2e3ad; padding:12px; font-size:12px; color:#8a6d17;">
+          <div style="font-weight:700; margin-bottom:6px;">🔔 有新版可以更新</div>
+          <div>1️⃣ 双击资料夹里的「更新.bat」</div>
+          <div>2️⃣ 跑完回来点下面 👇</div>
+          <div style="margin-top:8px; text-align:center; border:1.5px solid #a9d4ee; color:#4a9bc4; background:#fff; border-radius:999px; padding:7px; font-weight:600;">🔄 我更新好了，重新载入插件</div>
+        </div>
+      </div>
+      <div class="mockcap">▲ 打开插件最下面：有新版会像这样提示，并直接展开更新步骤</div>
+    </div>
 
     <div class="mock">
       <div class="filebox">
@@ -285,34 +300,21 @@
         <span style="flex:1"></span>
         <span class="tag-y">👆 双击它</span>
       </div>
-      <div class="mockcap">▲ 第 1 步：双击资料夹里的「更新.bat」</div>
+      <div class="mockcap">▲ 第 1 步：双击资料夹里的「更新.bat」，等它自动下载</div>
     </div>
 
     <div class="mock">
       <div class="cmdbox">
         <div>正在下载最新版...</div>
-        <div style="color:#7CFC7C;">[完成] 档案已更新到 v4.12</div>
-        <div style="color:#ffd964;">最后一步：到 chrome://extensions 点「刷新」按钮</div>
+        <div style="color:#7CFC7C;">[完成] 档案已更新到 v4.24</div>
+        <div style="color:#ffd964;">最后一步：回插件点「🔄 重新载入插件」</div>
       </div>
-      <div class="mockcap">▲ 看到绿色「[完成] 已更新到 vX」= 下载成功；照黄字提醒做下一步</div>
+      <div class="mockcap">▲ 看到绿色「[完成] 已更新到 vX」= 下载成功</div>
     </div>
 
-    <div class="mock">
-      <div class="browserbar">
-        <div class="dot" style="background:#f96"></div><div class="dot" style="background:#fc5"></div><div class="dot" style="background:#6c6"></div>
-        <div class="addr">chrome://extensions</div>
-      </div>
-      <div class="panelbox">
-        <div class="flex">
-          <span>🧩 一键打开/验证器/清理小工具　<span style="color:#999;font-size:12px;">v4.12</span></span>
-          <span style="flex:1"></span>
-          <span class="refresh">↻</span>
-        </div>
-      </div>
-      <div class="mockcap">▲ 第 2 步：到 chrome://extensions，点这个插件的「刷新 ↻」→ 版本就变最新</div>
-    </div>
+    <div class="tip">✅ <b>第 2 步：</b>回到插件，点底部那颗 <b>🔄 我更新好了，重新载入插件</b> → 版本立刻变最新。（这颗<b>等于帮你按了 chrome://extensions 的刷新</b>，不用自己去点。）</div>
 
-    <div class="warn">⚠️ 更新后<b>一定要点「刷新↻」</b>，否则画面版本不会变。若点了还是旧版号 → 代表「更新.bat」更新的资料夹和 Chrome 载入的不是同一个。</div>
+    <div class="warn">⚠️ 若插件<b>还是旧版本、底部没有这颗按钮</b>（第一次升级时会这样）：改用手动方式 —— 网址栏输入 <span class="key">chrome://extensions</span> → 点这个插件的「<b>刷新 ↻</b>」也可以。之后升上来就有自动提示了。</div>
     <div class="tip">第一次双击 <span class="key">更新.bat</span> 若跳 Windows 蓝框，点「更多信息 → 仍要运行」。它不会动你存的账密/验证器。</div>
   </div>
 

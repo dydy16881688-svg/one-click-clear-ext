@@ -27,8 +27,9 @@ try {
   Write-Host "更新位置: $dir" -ForegroundColor Gray
   Write-Host ""
   Write-Host "==============================================" -ForegroundColor Yellow
-  Write-Host " 最后一步(必做): 到 chrome://extensions" -ForegroundColor Yellow
-  Write-Host " 点这个插件的「刷新」按钮，版本才会变成 v$ver" -ForegroundColor Yellow
+  Write-Host " 最后一步(必做): 回到插件，点底部" -ForegroundColor Yellow
+  Write-Host " 「重新载入插件」按钮，版本就变成 v$ver" -ForegroundColor Yellow
+  Write-Host " (旧版没有该按钮 -> 到 chrome://extensions 点刷新)" -ForegroundColor Yellow
   Write-Host "==============================================" -ForegroundColor Yellow
 } catch {
   Write-Host ""
