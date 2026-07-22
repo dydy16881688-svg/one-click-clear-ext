@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "一键打开/验证器/清理小工具",
-  "version": "4.14.0",
+  "version": "4.15.0",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr9FHRANisaGi54OH0cZXY6mAZL0KWWeKb2ySmbXzm1BMNdB1BoCFeCxGwZQVSAmyD66kGr/UMwf2gPulq90sl6UlIS+z9indwqSEGMxeng1Ykt/LyqubnkgXYcZX3mVp4pbbBva8JAriwtRTkxzaMbRVO8MwSzXweGK26Ofjw7rTikF/+2Kw1RsSQIgbySymmhfa45AqvJUo55tgDfWSehuJFS4OnLiuOOEnmv6d7Fl+JjGvbxUOmGYKXS3zQff3LOeyTOZ4e51BE78DI6EVgUXMPiWBFJzmr2goJlP/wXmTR30Ii12LnUx7yVYFv4+9+FC7IfrfHx7NOL2gNsStvwIDAQAB",
   "description": "一键打开常用网址（Chrome 自动填帐密）、谷歌验证器动态码一键复制、一键登出+清浏览痕迹。",
 

@@ -67,8 +67,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           return;
         }
         sendResponse({ ok: true }); // 先回应，再处理分页/视窗（关视窗会连 popup 一起关）
-        if (msg.afterClear === "close-all") closeAllWindows();
-        else if (msg.afterClear === "close-tabs" || msg.afterClear === "close") closeAllTabs();
+        if (msg.afterClear && msg.afterClear.indexOf("close") === 0) closeToSingle();
         else if (msg.afterClear === "reload") reloadAllTabs();
       });
     };
@@ -106,22 +105,13 @@ function reloadAllTabs() {
   });
 }
 
-// 关闭此设定档的「所有视窗」（整个浏览器关掉）
-function closeAllWindows() {
+// 只留一个空白视窗，关掉其他所有视窗（留一页让你手动登出设定档）
+function closeToSingle() {
   chrome.windows.getAll({}, (wins) => {
-    for (const w of wins) {
-      try { chrome.windows.remove(w.id); } catch (e) {}
-    }
-  });
-}
-
-// 关闭所有视窗的 http(s) 分页（先开一个新分页，避免浏览器整个关掉）
-function closeAllTabs() {
-  chrome.tabs.query({}, (tabs) => {
-    const ids = tabs.filter((t) => t.url && /^https?:/i.test(t.url)).map((t) => t.id);
-    if (!ids.length) return;
-    chrome.tabs.create({ url: "chrome://newtab" }, () => {
-      try { chrome.tabs.remove(ids); } catch (e) {}
+    chrome.windows.create({ url: "chrome://newtab" }, () => {
+      for (const w of wins) {
+        try { chrome.windows.remove(w.id); } catch (e) {}
+      }
     });
   });
 }
